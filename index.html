@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <!-- ============================================================
+         META & ENCODAGE
+         - charset UTF-8 : gère tous les caractères spéciaux (accents, etc.)
+         - viewport : rend la page responsive sur mobile
+         - theme-color : colore la barre du navigateur sur mobile
+         ============================================================ -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b0b10" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+    <title>Portfolio | Cheikh Saliou Diaw – Administrateur Réseau & Sécurité IT</title>
+
+    <!-- ============================================================
+         SEO — RÉFÉRENCEMENT NATUREL
+         - description : texte affiché dans les résultats Google (~155 car.)
+         - canonical : indique l'URL principale à Google pour éviter
+           le contenu dupliqué (à mettre à jour avec ton vrai domaine)
+         - robots : autorise l'indexation et le suivi des liens
+         ============================================================ -->
+    <meta name="description" content="Portfolio de Cheikh Saliou Diaw, Administrateur Réseau & Sécurité IT chez Sonatel, spécialisé en supervision NOC/SOC, automatisation Python et infrastructures télécoms sécurisées.">
+    <meta name="author" content="Cheikh Saliou Diaw">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://ton-domaine-ou-github-pages.com">
+
+    <!-- ============================================================
+         OPEN GRAPH — APERÇU SUR LES RÉSEAUX SOCIAUX
+         Quand quelqu'un partage ton lien sur LinkedIn, Facebook, etc.,
+         ces balises définissent le titre, la description et l'image
+         affichés dans l'aperçu.
+         ============================================================ -->
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="fr_FR">
+    <meta property="og:title" content="Portfolio | Cheikh Saliou Diaw">
+    <meta property="og:description" content="Administrateur Réseau & Sécurité IT, supervision temps réel et automatisation Python.">
+    <meta property="og:url" content="https://ton-domaine-ou-github-pages.com">
+    <meta property="og:image" content="https://ton-domaine-ou-github-pages.com/assets/cheikh-saliou-diaw.jpg">
+    <meta property="og:image:alt" content="Portrait de Cheikh Saliou Diaw">
+
+    <!-- Twitter / X : aperçu avec grande image -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Portfolio | Cheikh Saliou Diaw">
+    <meta name="twitter:description" content="Administrateur Réseau & Sécurité IT, supervision temps réel et automatisation Python.">
+    <meta name="twitter:image" content="https://ton-domaine-ou-github-pages.com/assets/cheikh-saliou-diaw.jpg">
+
+    <!-- ============================================================
+         DONNÉES STRUCTURÉES JSON-LD — SEO AVANCÉ
+         Permet à Google d'afficher un "knowledge panel" enrichi
+         avec ton nom, ton poste, ton entreprise, tes liens, etc.
+         ============================================================ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Cheikh Saliou Diaw",
+        "jobTitle": "Administrateur Réseau & Sécurité IT",
+        "image": "https://ton-domaine-ou-github-pages.com/assets/cheikh-saliou-diaw.jpg",
+        "worksFor": {
+            "@type": "Organization",
+            "name": "Groupe Sonatel"
+        },
+        "alumniOf": [
+            { "@type": "CollegeOrUniversity", "name": "ISI Dakar" },
+            { "@type": "CollegeOrUniversity", "name": "Université Numérique Cheikh Hamidou Kane" }
+        ],
+        "knowsAbout": [
+            "Administration réseau",
+            "Sécurité informatique",
+            "Supervision NOC/SOC",
+            "Fortinet",
+            "Cisco",
+            "Automatisation Python"
+        ],
+        "knowsLanguage": ["fr", "en", "wo"],
+        "url": "https://ton-domaine-ou-github-pages.com",
+        "email": "dcheikhsaliou@gmail.com",
+        "telephone": "+221780140984",
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Rufisque",
+            "addressCountry": "SN"
+        },
+        "sameAs": [
+            "https://www.linkedin.com/in/cheikh-saliou-diaw-876883200"
+        ]
+    }
+    </script>
+
+    <!-- ============================================================
+         THÈME CLAIR / SOMBRE — ANTI-FLASH (FOUC)
+         Ce petit script est volontairement placé AVANT le CSS et
+         exécuté immédiatement (pas de defer) : il applique le thème
+         mémorisé sur <html> avant le premier rendu, ce qui évite
+         l'éclair blanc au chargement.
+         ============================================================ -->
+    <script>
+        (function () {
+            try {
+                var stored = localStorage.getItem('theme');
+                var prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+                document.documentElement.dataset.theme = stored || (prefersLight ? 'light' : 'dark');
+            } catch (e) {
+                document.documentElement.dataset.theme = 'dark';
+            }
+        })();
+    </script>
+
+    <!-- ============================================================
+         POLICES — GOOGLE FONTS
+         - preconnect : ouvre la connexion au serveur de polices en avance
+           pour accélérer le chargement (optimisation de performance)
+         - display=swap : affiche le texte avec une police système
+           en attendant le chargement de Poppins (évite le FOIT)
+         ============================================================ -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- ============================================================
+         FAVICON — Icône dans l'onglet du navigateur
+         ============================================================ -->
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    <link rel="apple-touch-icon" href="assets/cheikh-saliou-diaw.jpg">
+
+    <!-- ============================================================
+         FEUILLE DE STYLES PRINCIPALE
+         Contient tout le CSS du portfolio (layout, couleurs, responsive…)
+         ============================================================ -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ============================================================
+         LIEN D'ÉVITEMENT (Skip Link)
+         Permet aux utilisateurs naviguant au clavier (accessibilité)
+         de sauter directement au contenu principal, sans devoir
+         traverser toute la barre de navigation. Visuellement masqué
+         sauf quand il reçoit le focus clavier.
+         ============================================================ -->
+    <a class="skip-link" href="#contenu-principal">Aller au contenu principal</a>
+
+    <!-- ============================================================
+         BARRE DE PROGRESSION DE LECTURE
+         Fine barre en haut de l'écran qui se remplit au fur et à
+         mesure du défilement. Purement décorative → aria-hidden.
+         ============================================================ -->
+    <div class="scroll-progress" aria-hidden="true"><span></span></div>
+
+    <!-- ============================================================
+         BARRE DE NAVIGATION
+         Placée en dehors du <header> : un parent avec overflow:hidden
+         casse le position:sticky. Ici elle reste collée en haut
+         pendant tout le défilement de la page.
+         - .brand : logo + nom cliquable qui ramène en haut
+         - .nav-toggle : bouton hamburger visible uniquement sur mobile
+           (aria-expanded et aria-controls gèrent l'accessibilité)
+         - .nav-links : menu de navigation avec ancres vers les sections
+         - .theme-toggle : bascule thème clair / sombre
+         ============================================================ -->
+    <nav class="navbar" aria-label="Navigation principale">
+        <a class="brand" href="#accueil">
+            <span class="brand-logo" aria-hidden="true">CS</span>
+            <span class="brand-name">Cheikh Saliou Diaw</span>
+        </a>
+
+        <!-- Liste des liens de navigation.
+             aria-current="page" est ajouté dynamiquement par script.js
+             sur le lien correspondant à la section visible. -->
+        <ul id="primary-navigation" class="nav-links">
+            <li><a href="#accueil">Accueil</a></li>
+            <li><a href="#apropos">À propos</a></li>
+            <li><a href="#competences">Compétences</a></li>
+            <li><a href="#experiences">Expériences</a></li>
+            <li><a href="#projets">Projets</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+
+        <div class="nav-actions">
+            <!-- Bascule thème clair / sombre -->
+            <button
+                class="theme-toggle"
+                type="button"
+                aria-label="Basculer en thème clair"
+                aria-pressed="false"
+            >
+                <span class="theme-icon theme-icon-sun" aria-hidden="true">☀</span>
+                <span class="theme-icon theme-icon-moon" aria-hidden="true">☾</span>
+            </button>
+
+            <!-- Bouton hamburger (menu mobile) -->
+            <button
+                class="nav-toggle"
+                type="button"
+                aria-label="Ouvrir le menu"
+                aria-expanded="false"
+                aria-controls="primary-navigation"
+            >
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ============================================================
+         EN-TÊTE (HEADER) — SECTION HERO
+         Section d'accroche principale avec le nom, le titre,
+         la description et les coordonnées.
+         ============================================================ -->
+    <header id="accueil" class="hero">
+
+        <!-- ========== CONTENU HERO (accroche principale) ==========
+             La zone hero est divisée en deux colonnes (CSS Grid) :
+             - hero-content : texte d'accroche, boutons CTA, coordonnées
+             - hero-aside : portrait + profil rapide (carte latérale)
+             L'attribut data-animate déclenche l'animation d'apparition
+             au scroll via l'IntersectionObserver (script.js).
+        -->
+        <div class="hero-wrapper">
+
+            <!-- Colonne gauche : présentation textuelle -->
+            <div class="hero-content" data-animate>
+                <span class="hero-badge">
+                    <span class="status-dot" aria-hidden="true"></span>
+                    Hello, je suis
+                </span>
+                <h1>Cheikh Saliou Diaw</h1>
+
+                <!-- Le titre est réécrit lettre par lettre par script.js.
+                     Le texte reste présent dans le HTML pour le SEO et
+                     pour les utilisateurs sans JavaScript. -->
+                <h2 class="hero-role" data-typed="Administrateur Réseau &amp; Sécurité IT|Superviseur NOC/SOC|Automatisation Python">
+                    Administrateur Réseau &amp; Sécurité IT
+                </h2>
+
+                <p>
+                    Je conçois et sécurise des infrastructures télécoms et informatiques pour garantir la continuité des services
+                    critiques. Mon quotidien : surveiller en temps réel le SMS, l'USSD et Orange Money, automatiser les reportings
+                    et coordonner la résolution des incidents pour une qualité de service irréprochable.
+                </p>
+
+                <!-- Boutons d'action (CTA = Call To Action) -->
+                <div class="hero-actions">
+                    <a class="cta" href="#contact">Me contacter</a>
+                    <a class="ghost" href="#experiences">Voir mes expériences</a>
+                    <!-- TODO : Ajouter ton CV en PDF dans le dossier assets/ et décommenter -->
+                    <!-- <a class="ghost ghost-alt" href="assets/CV-Cheikh-Saliou-Diaw.pdf" download>Télécharger mon CV</a> -->
+                </div>
+
+                <!-- Coordonnées rapides avec icônes emoji -->
+                <ul class="hero-info" aria-label="Coordonnées principales">
+                    <li><span aria-hidden="true">📍</span> HLM Rufisque, Sénégal</li>
+                    <li><span aria-hidden="true">📞</span> <a href="tel:+221780140984">+221 78 014 09 84</a></li>
+                    <li>
+                        <span aria-hidden="true">✉️</span>
+                        <a href="mailto:dcheikhsaliou@gmail.com">dcheikhsaliou@gmail.com</a>
+                        <!-- Bouton de copie rapide de l'adresse email -->
+                        <button
+                            class="copy-btn"
+                            type="button"
+                            data-copy="dcheikhsaliou@gmail.com"
+                            aria-label="Copier l'adresse email"
+                        >Copier</button>
+                    </li>
+                    <li><span aria-hidden="true">🔗</span> <a href="https://www.linkedin.com/in/cheikh-saliou-diaw-876883200" target="_blank" rel="noopener noreferrer" aria-label="Profil LinkedIn de Cheikh Saliou Diaw (ouvre un nouvel onglet)">LinkedIn</a></li>
+                </ul>
+            </div>
+
+            <!-- Colonne droite : carte de profil rapide avec portrait -->
+            <aside class="hero-aside" aria-labelledby="profil-heading" data-animate>
+                <div class="portrait-frame">
+                    <img
+                        src="assets/cheikh-saliou-diaw.jpg"
+                        alt="Portrait de Cheikh Saliou Diaw"
+                        width="1024"
+                        height="1024"
+                        fetchpriority="high"
+                        decoding="async"
+                    >
+                </div>
+                <div class="aside-content">
+                    <h3 id="profil-heading">Profil rapide</h3>
+                    <p>Administrateur Réseau &amp; Sécurité IT chez Sonatel, passionné par l'automatisation et la supervision temps réel.</p>
+                    <!-- Tags de compétences clés (badges) -->
+                    <div class="tags">
+                        <span>Supervision NOC/SOC</span>
+                        <span>Automatisation Python</span>
+                        <span>Fortinet &amp; Cisco</span>
+                    </div>
+                </div>
+            </aside>
+
+        </div>
+
+        <!-- ========== BANDEAU DE CHIFFRES CLÉS ==========
+             Les valeurs sont comptées progressivement au scroll
+             (data-count = valeur finale, data-suffix = symbole ajouté).
+             Pour les valeurs non numériques (24/7), on n'anime pas.
+        -->
+        <ul class="stats" aria-label="Chiffres clés" data-animate>
+            <li class="stat">
+                <span class="stat-value">24/7</span>
+                <span class="stat-label">Supervision des services critiques</span>
+            </li>
+            <li class="stat">
+                <span class="stat-value" data-count="3">3</span>
+                <span class="stat-label">Services critiques supervisés</span>
+            </li>
+            <li class="stat">
+                <span class="stat-value" data-count="4" data-suffix="+">4+</span>
+                <span class="stat-label">Projets &amp; réalisations</span>
+            </li>
+            <li class="stat">
+                <span class="stat-value" data-count="3">3</span>
+                <span class="stat-label">Langues parlées</span>
+            </li>
+        </ul>
+    </header>
+
+    <!-- ============================================================
+         CONTENU PRINCIPAL
+         Balise <main> : identifie le contenu central de la page.
+         Important pour l'accessibilité (les lecteurs d'écran peuvent
+         sauter directement ici). L'id permet au skip-link de cibler
+         cette zone.
+         ============================================================ -->
+    <main id="contenu-principal">
+
+        <!-- ========== SECTION "À PROPOS" ==========
+             Trois cartes présentant :
+             1. Le profil professionnel (résumé de carrière)
+             2. Les informations personnelles (contact, langues)
+             3. La formation académique
+        -->
+        <section id="apropos" class="section about" aria-labelledby="apropos-titre">
+            <div class="section-header">
+                <h2 id="apropos-titre">À propos</h2>
+                <p>Qui suis-je&nbsp;?</p>
+            </div>
+            <div class="about-grid">
+                <!-- Carte 1 : Profil professionnel -->
+                <article class="about-card" data-animate>
+                    <h3>Profil professionnel</h3>
+                    <p>
+                        Administrateur Réseau &amp; Sécurité IT, je conçois, sécurise et supervise des infrastructures télécoms et informatiques résilientes pour le Groupe Sonatel. Rigoureux et orienté service, je détecte rapidement les anomalies, anticipe les incidents et pilote les plans d'amélioration continue. Mes scripts Python dédiés au reporting optimisent les performances et fluidifient la communication entre équipes.
+                    </p>
+                </article>
+                <!-- Carte 2 : Informations personnelles -->
+                <article class="about-card" data-animate>
+                    <h3>Informations personnelles</h3>
+                    <ul>
+                        <li><strong>Nom :</strong> Cheikh Saliou Diaw</li>
+                        <li><strong>Localisation :</strong> HLM Rufisque, Sénégal</li>
+                        <li><strong>Email :</strong> <a href="mailto:dcheikhsaliou@gmail.com">dcheikhsaliou@gmail.com</a></li>
+                        <li><strong>Téléphone :</strong> <a href="tel:+221780140984">+221 78 014 09 84</a></li>
+                        <li><strong>Langues :</strong> Français, Anglais, Wolof</li>
+                    </ul>
+                </article>
+                <!-- Carte 3 : Formation académique -->
+                <article class="about-card" data-animate>
+                    <h3>Formation</h3>
+                    <ul>
+                        <li>Licence Administration Réseaux &amp; Systèmes – ISI Dakar (2020 – 2023)</li>
+                        <li>Licence Informatique – Université Numérique Cheikh Hamidou Kane (2022)</li>
+                        <li>Compétences&nbsp;: Fortinet, Cisco, Sécurité Réseau, Développement web</li>
+                    </ul>
+                </article>
+            </div>
+        </section>
+
+        <!-- ========== SECTION "COMPÉTENCES" ==========
+             Grille de 4 cartes résumant les domaines d'expertise :
+             Réseaux, Supervision, Automatisation, Systèmes.
+             Chaque carte liste ses technologies sous forme de puces
+             pour un balayage visuel rapide par les recruteurs.
+        -->
+        <section id="competences" class="section skills" aria-labelledby="competences-titre">
+            <div class="section-header">
+                <h2 id="competences-titre">Compétences</h2>
+                <p>Ce que je maîtrise</p>
+            </div>
+            <div class="skills-grid">
+                <article class="skill-card" data-animate>
+                    <span class="skill-icon" aria-hidden="true">🛡️</span>
+                    <h3>Réseaux &amp; Sécurité</h3>
+                    <p>Conception d'architectures segmentées et durcies, du cœur de réseau à la DMZ.</p>
+                    <ul class="chip-list">
+                        <li>VLAN</li>
+                        <li>DMZ</li>
+                        <li>LAN/WAN</li>
+                        <li>FortiGate</li>
+                        <li>Cisco</li>
+                        <li>Firewalling</li>
+                    </ul>
+                </article>
+                <article class="skill-card" data-animate>
+                    <span class="skill-icon" aria-hidden="true">📡</span>
+                    <h3>Supervision</h3>
+                    <p>Surveillance temps réel de la QoS et pilotage des incidents jusqu'à leur clôture.</p>
+                    <ul class="chip-list">
+                        <li>NOC/SOC</li>
+                        <li>Grafana</li>
+                        <li>Kapptivate</li>
+                        <li>DaSeT</li>
+                        <li>IRIS/IPI</li>
+                        <li>QoS</li>
+                    </ul>
+                </article>
+                <article class="skill-card" data-animate>
+                    <span class="skill-icon" aria-hidden="true">⚙️</span>
+                    <h3>Automatisation</h3>
+                    <p>Scripts de reporting automatique et alerting proactif pour libérer du temps aux équipes.</p>
+                    <ul class="chip-list">
+                        <li>Python</li>
+                        <li>Java</li>
+                        <li>Selenium</li>
+                        <li>Reporting</li>
+                        <li>Alerting</li>
+                    </ul>
+                </article>
+                <article class="skill-card" data-animate>
+                    <span class="skill-icon" aria-hidden="true">💻</span>
+                    <h3>Systèmes &amp; outils</h3>
+                    <p>Administration multi-plateforme et outils collaboratifs du quotidien.</p>
+                    <ul class="chip-list">
+                        <li>Windows</li>
+                        <li>Linux</li>
+                        <li>HTML/CSS/JS</li>
+                        <li>MySQL</li>
+                        <li>Excel</li>
+                        <li>Outlook</li>
+                    </ul>
+                </article>
+            </div>
+        </section>
+
+        <!-- ========== SECTION "EXPÉRIENCES" ==========
+             Timeline verticale (frise chronologique) présentant
+             les expériences professionnelles de la plus récente
+             à la plus ancienne. Le trait vertical et les points
+             sont générés en CSS via ::before.
+        -->
+        <section id="experiences" class="section timeline-section" aria-labelledby="experiences-titre">
+            <div class="section-header">
+                <h2 id="experiences-titre">Expériences</h2>
+                <p>Parcours professionnel</p>
+            </div>
+            <div class="timeline">
+                <!-- Expérience 1 : Poste actuel chez Sonatel -->
+                <article class="timeline-item is-current" data-animate>
+                    <span class="timeline-date">
+                        <time datetime="2024-04">Avril 2024</time> – Aujourd'hui · Pikine, Dakar
+                        <span class="badge-now">En poste</span>
+                    </span>
+                    <h3>Superviseur Maintenance – Groupe Sonatel</h3>
+                    <ul>
+                        <li>Supervision des services critiques (SMS, USSD, Orange Money).</li>
+                        <li>Conception et déploiement d'architectures réseau sécurisées.</li>
+                        <li>Maintenance proactive et coordination pour résoudre les incidents.</li>
+                        <li>Optimisation continue de la performance technique.</li>
+                    </ul>
+                </article>
+                <!-- Expérience 2 : Stage chez SENELEC -->
+                <article class="timeline-item" data-animate>
+                    <span class="timeline-date">
+                        <time datetime="2024-01">Janvier 2024</time> – <time datetime="2024-02">Février 2024</time> · Dakar
+                    </span>
+                    <h3>Stagiaire Infrastructure Informatique – SENELEC</h3>
+                    <ul>
+                        <li>Supervision et maintenance des infrastructures LAN/WAN.</li>
+                        <li>Optimisation de la sécurité via les politiques de filtrage.</li>
+                        <li>Participation à la gestion des équipements réseau Cisco.</li>
+                    </ul>
+                </article>
+                <!-- Expérience 3 : Premier stage chez Sonatel -->
+                <article class="timeline-item" data-animate>
+                    <span class="timeline-date">
+                        <time datetime="2023-09">Septembre 2023</time> – <time datetime="2023-11">Novembre 2023</time> · Dakar
+                    </span>
+                    <h3>Technicien Informatique (Stage) – Groupe Sonatel</h3>
+                    <ul>
+                        <li>Conception d'architectures de sécurité réseau.</li>
+                        <li>Configuration et maintenance des équipements Fortinet et Cisco.</li>
+                        <li>Administration des réseaux LAN/WAN et DMZ.</li>
+                    </ul>
+                </article>
+            </div>
+        </section>
+
+        <!-- ========== SECTION "PROJETS & RÉALISATIONS" ==========
+             Grille de cartes présentant les projets significatifs.
+             Chaque carte a un effet de survol (hover) défini en CSS
+             qui soulève la carte et change la bordure.
+             Les data-tags servent au filtrage par catégorie (script.js).
+        -->
+        <section id="projets" class="section projects" aria-labelledby="projets-titre">
+            <div class="section-header">
+                <h2 id="projets-titre">Projets &amp; réalisations</h2>
+                <p>Ce que j'ai accompli</p>
+            </div>
+
+            <!-- Filtres de catégorie : un groupe de boutons radio ARIA -->
+            <div class="filters" role="group" aria-label="Filtrer les projets par catégorie">
+                <button type="button" class="filter is-active" data-filter="all" aria-pressed="true">Tous</button>
+                <button type="button" class="filter" data-filter="tech" aria-pressed="false">Technique</button>
+                <button type="button" class="filter" data-filter="mobile" aria-pressed="false">Mobile</button>
+                <button type="button" class="filter" data-filter="digital" aria-pressed="false">Digital</button>
+            </div>
+
+            <div class="project-grid">
+                <!-- Projet 1 : Automatisation reporting -->
+                <article class="project-card" data-category="tech" data-animate>
+                    <span class="project-icon" aria-hidden="true">🐍</span>
+                    <h3>Automatisation du reporting Diagnet</h3>
+                    <p>Scripts Python pour capturer les graphiques QoS, analyser les données et envoyer automatiquement les rapports via Outlook.</p>
+                    <ul class="chip-list">
+                        <li>Python</li>
+                        <li>Selenium</li>
+                        <li>Outlook</li>
+                    </ul>
+                </article>
+                <!-- Projet 2 : Application Flutter -->
+                <article class="project-card" data-category="mobile" data-animate>
+                    <span class="project-icon" aria-hidden="true">📱</span>
+                    <h3>Application Flutter de transfert d'argent</h3>
+                    <p>Application mobile sécurisée facilitant les transferts Sénégal–Mauritanie avec une expérience utilisateur fluide.</p>
+                    <ul class="chip-list">
+                        <li>Flutter</li>
+                        <li>Sécurité</li>
+                        <li>UX mobile</li>
+                    </ul>
+                </article>
+                <!-- Projet 3 : Branding parfums -->
+                <article class="project-card" data-category="digital" data-animate>
+                    <span class="project-icon" aria-hidden="true">🌸</span>
+                    <h3>Maison Riwaha Ndakaru</h3>
+                    <p>Création de l'identité de marque, design packaging et stratégie digitale pour une ligne de parfums locale.</p>
+                    <ul class="chip-list">
+                        <li>Branding</li>
+                        <li>Packaging</li>
+                        <li>Social media</li>
+                    </ul>
+                </article>
+                <!-- Projet 4 : Association caritative -->
+                <article class="project-card" data-category="digital" data-animate>
+                    <span class="project-icon" aria-hidden="true">🤝</span>
+                    <h3>Dalal Jaam Donation</h3>
+                    <p>Digitalisation de l'association caritative : collecte de dons, communication et coordination des actions.</p>
+                    <ul class="chip-list">
+                        <li>Digitalisation</li>
+                        <li>Communication</li>
+                    </ul>
+                    <a class="project-link" href="https://www.instagram.com/dalal_jaam_donation" target="_blank" rel="noopener noreferrer">
+                        Voir sur Instagram
+                        <span aria-hidden="true">↗</span>
+                    </a>
+                </article>
+            </div>
+
+            <!-- Message affiché si aucun projet ne correspond au filtre -->
+            <p class="no-result" hidden>Aucun projet dans cette catégorie pour le moment.</p>
+        </section>
+
+        <!-- ========== SECTION "CONTACT" ==========
+             Deux colonnes :
+             - Formulaire de contact
+             - Coordonnées directes (téléphone, email, réseaux sociaux)
+
+             ENVOI DU FORMULAIRE :
+             Par défaut, script.js compose un email pré-rempli et ouvre
+             le client mail de l'utilisateur (aucun serveur nécessaire).
+             Pour un envoi réellement automatique, crée un compte gratuit
+             sur https://formspree.io puis remplace l'attribut action par
+             ton endpoint (ex. action="https://formspree.io/f/xxxxxxx")
+             et ajoute data-endpoint="true" sur le <form> : script.js
+             enverra alors les données en AJAX.
+        -->
+        <section id="contact" class="section contact" aria-labelledby="contact-titre">
+            <div class="section-header">
+                <h2 id="contact-titre">Contact</h2>
+                <p>Travaillons ensemble</p>
+            </div>
+            <div class="contact-grid">
+
+                <!-- Colonne gauche : Formulaire de contact -->
+                <div class="contact-card" data-animate>
+                    <h3>Me laisser un message</h3>
+                    <form class="contact-form" novalidate>
+                        <!-- Champ Nom -->
+                        <div class="form-group">
+                            <label for="name">Nom</label>
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                placeholder="Votre nom"
+                                required
+                                minlength="2"
+                                autocomplete="name"
+                                aria-required="true"
+                                aria-describedby="name-error"
+                            >
+                            <!-- role="alert" : le message est annoncé dès qu'il apparaît -->
+                            <p class="field-error" id="name-error" role="alert"></p>
+                        </div>
+                        <!-- Champ Email -->
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                placeholder="Votre email"
+                                required
+                                autocomplete="email"
+                                aria-required="true"
+                                aria-describedby="email-error"
+                            >
+                            <p class="field-error" id="email-error" role="alert"></p>
+                        </div>
+                        <!-- Champ Sujet -->
+                        <div class="form-group">
+                            <label for="subject">Sujet</label>
+                            <input
+                                type="text"
+                                id="subject"
+                                name="subject"
+                                placeholder="Objet de votre message"
+                                autocomplete="off"
+                            >
+                        </div>
+                        <!-- Champ Message -->
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea
+                                id="message"
+                                name="message"
+                                rows="5"
+                                placeholder="Votre message"
+                                required
+                                minlength="10"
+                                maxlength="1000"
+                                aria-required="true"
+                                aria-describedby="message-error message-count"
+                            ></textarea>
+                            <div class="form-meta">
+                                <p class="field-error" id="message-error" role="alert"></p>
+                                <!-- Compteur de caractères mis à jour par script.js -->
+                                <span class="char-count" id="message-count">0 / 1000</span>
+                            </div>
+                        </div>
+
+                        <!-- Champ piège anti-spam ("honeypot") : invisible pour
+                             l'humain, souvent rempli par les robots. Si rempli,
+                             on ignore silencieusement l'envoi. -->
+                        <div class="honeypot" aria-hidden="true">
+                            <label for="website">Ne pas remplir ce champ</label>
+                            <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+                        </div>
+
+                        <!-- Bouton d'envoi -->
+                        <button type="submit" class="cta">Envoyer le message</button>
+
+                        <!-- Zone de statut annoncée par les lecteurs d'écran -->
+                        <p class="form-status" role="status" aria-live="polite"></p>
+                    </form>
+                </div>
+
+                <!-- Colonne droite : Coordonnées directes -->
+                <div class="contact-card" data-animate>
+                    <h3>Coordonnées directes</h3>
+                    <ul class="contact-list">
+                        <li><strong>Adresse :</strong> HLM Rufisque, Sénégal</li>
+                        <li><strong>Téléphone :</strong> <a href="tel:+221780140984">+221 78 014 09 84</a></li>
+                        <li><strong>Email :</strong> <a href="mailto:dcheikhsaliou@gmail.com">dcheikhsaliou@gmail.com</a></li>
+                        <li><strong>LinkedIn :</strong> <a href="https://www.linkedin.com/in/cheikh-saliou-diaw-876883200" target="_blank" rel="noopener noreferrer" aria-label="Profil LinkedIn (ouvre un nouvel onglet)">linkedin.com/in/cheikh-saliou-diaw</a></li>
+                        <li><strong>Instagram :</strong> <a href="https://www.instagram.com/dalal_jaam_donation" target="_blank" rel="noopener noreferrer" aria-label="Compte Instagram Dalal Jaam Donation (ouvre un nouvel onglet)">@dalal_jaam_donation</a></li>
+                        <li><strong>YouTube :</strong> Chaîne d'information en temps réel</li>
+                    </ul>
+
+                    <!-- Encart de disponibilité -->
+                    <div class="availability">
+                        <span class="status-dot" aria-hidden="true"></span>
+                        <p>Ouvert aux opportunités et missions en réseaux &amp; sécurité.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ============================================================
+         BOUTON "RETOUR EN HAUT"
+         Apparaît en position fixe en bas à droite quand l'utilisateur
+         a scrollé de plus de 300px (géré par script.js).
+         Au clic, remonte en haut de page avec un défilement fluide.
+         ============================================================ -->
+    <button class="back-to-top" type="button" aria-label="Revenir en haut de la page">
+        <span aria-hidden="true">↑</span>
+    </button>
+
+    <!-- ============================================================
+         PIED DE PAGE (FOOTER)
+         Contient le copyright avec l'année dynamique (mise à jour
+         automatiquement par script.js via new Date().getFullYear())
+         ============================================================ -->
+    <footer class="footer">
+        <p>&copy; <span id="year">2026</span> Cheikh Saliou Diaw – Portfolio</p>
+        <p class="footer-note">Conçu et développé en HTML, CSS et JavaScript.</p>
+    </footer>
+
+    <!-- ============================================================
+         MESSAGE SANS JAVASCRIPT (NOSCRIPT)
+         S'affiche uniquement si JavaScript est désactivé dans le
+         navigateur. Prévient l'utilisateur que certaines fonctionnalités
+         (animations, menu mobile) nécessitent JS.
+         ============================================================ -->
+    <noscript>
+        <p class="noscript-banner">
+            Ce site fonctionne mieux avec JavaScript activé. Certaines animations et le menu mobile nécessitent JavaScript.
+        </p>
+    </noscript>
+
+    <!-- ============================================================
+         SCRIPT PRINCIPAL
+         - defer : le script est chargé en parallèle du HTML puis
+           exécuté APRÈS le parsing complet du DOM. C'est plus
+           performant que de mettre le script en bas sans defer.
+         Contient : menu mobile, thème, animations scroll, scrollspy,
+         filtres projets, formulaire, back-to-top, année dynamique.
+         ============================================================ -->
+    <script src="script.js" defer></script>
+
+</body>
+</html>
