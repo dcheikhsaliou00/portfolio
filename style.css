@@ -855,17 +855,6 @@ html[data-theme="light"] .theme-icon-sun {
     box-shadow: 0 0 0 6px rgba(var(--accent-rgb), 0.18);
 }
 
-/* Le poste actuel a un point animé */
-.timeline-item.is-current::before {
-    animation: pulse-accent 2.4s infinite;
-}
-
-@keyframes pulse-accent {
-    0%   { box-shadow: 0 0 0 6px rgba(var(--accent-rgb), 0.28); }
-    70%  { box-shadow: 0 0 0 14px rgba(var(--accent-rgb), 0); }
-    100% { box-shadow: 0 0 0 6px rgba(var(--accent-rgb), 0); }
-}
-
 .timeline-item h3 {
     color: var(--text-primary);
     margin-bottom: 0.6rem;
@@ -879,17 +868,6 @@ html[data-theme="light"] .theme-icon-sun {
     color: var(--accent);
     font-weight: 600;
     font-size: 0.92rem;
-}
-
-.badge-now {
-    padding: 0.1rem 0.6rem;
-    border-radius: 999px;
-    background: rgba(34, 197, 94, 0.14);
-    border: 1px solid rgba(34, 197, 94, 0.4);
-    color: #22c55e;
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
 }
 
 .timeline-item ul {

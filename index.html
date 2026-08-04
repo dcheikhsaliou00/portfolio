@@ -20,7 +20,7 @@
            le contenu dupliqué (à mettre à jour avec ton vrai domaine)
          - robots : autorise l'indexation et le suivi des liens
          ============================================================ -->
-    <meta name="description" content="Portfolio de Cheikh Saliou Diaw, Administrateur Réseau & Sécurité IT chez Sonatel, spécialisé en supervision NOC/SOC, automatisation Python et infrastructures télécoms sécurisées.">
+    <meta name="description" content="Portfolio de Cheikh Saliou Diaw, Administrateur Réseau & Sécurité IT passé par le Groupe Sonatel, spécialisé en supervision NOC/SOC, automatisation Python et infrastructures télécoms sécurisées.">
     <meta name="author" content="Cheikh Saliou Diaw">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://ton-domaine-ou-github-pages.com">
@@ -57,9 +57,13 @@
         "name": "Cheikh Saliou Diaw",
         "jobTitle": "Administrateur Réseau & Sécurité IT",
         "image": "https://ton-domaine-ou-github-pages.com/assets/cheikh-saliou-diaw.jpg",
-        "worksFor": {
-            "@type": "Organization",
-            "name": "Groupe Sonatel"
+        "hasOccupation": {
+            "@type": "Occupation",
+            "name": "Administrateur Réseau & Sécurité IT",
+            "occupationLocation": {
+                "@type": "City",
+                "name": "Dakar"
+            }
         },
         "alumniOf": [
             { "@type": "CollegeOrUniversity", "name": "ISI Dakar" },
@@ -238,8 +242,8 @@
 
                 <p>
                     Je conçois et sécurise des infrastructures télécoms et informatiques pour garantir la continuité des services
-                    critiques. Mon quotidien : surveiller en temps réel le SMS, l'USSD et Orange Money, automatiser les reportings
-                    et coordonner la résolution des incidents pour une qualité de service irréprochable.
+                    critiques. Pendant deux ans au Groupe Sonatel, j'ai supervisé en temps réel le SMS, l'USSD et Orange Money,
+                    automatisé les reportings et coordonné la résolution des incidents pour une qualité de service irréprochable.
                 </p>
 
                 <!-- Boutons d'action (CTA = Call To Action) -->
@@ -272,6 +276,11 @@
             <!-- Colonne droite : carte de profil rapide avec portrait -->
             <aside class="hero-aside" aria-labelledby="profil-heading" data-animate>
                 <div class="portrait-frame">
+                    <!-- Si la photo ne se charge pas (chemin cassé, fichier
+                         manquant), onerror bascule sur le visuel SVG de
+                         secours plutôt que d'afficher une image brisée.
+                         this.onerror=null évite une boucle infinie si le
+                         fichier de secours manque lui aussi. -->
                     <img
                         src="assets/cheikh-saliou-diaw.jpg"
                         alt="Portrait de Cheikh Saliou Diaw"
@@ -279,11 +288,12 @@
                         height="1024"
                         fetchpriority="high"
                         decoding="async"
+                        onerror="this.onerror=null; this.src='assets/cheikh-saliou-diaw.svg';"
                     >
                 </div>
                 <div class="aside-content">
                     <h3 id="profil-heading">Profil rapide</h3>
-                    <p>Administrateur Réseau &amp; Sécurité IT chez Sonatel, passionné par l'automatisation et la supervision temps réel.</p>
+                    <p>Administrateur Réseau &amp; Sécurité IT, deux ans passés à superviser les services critiques du Groupe Sonatel. Passionné d'automatisation et de supervision temps réel.</p>
                     <!-- Tags de compétences clés (badges) -->
                     <div class="tags">
                         <span>Supervision NOC/SOC</span>
@@ -310,7 +320,7 @@
                 <span class="stat-label">Services critiques supervisés</span>
             </li>
             <li class="stat">
-                <span class="stat-value" data-count="4" data-suffix="+">4+</span>
+                <span class="stat-value" data-count="9">9</span>
                 <span class="stat-label">Projets &amp; réalisations</span>
             </li>
             <li class="stat">
@@ -345,7 +355,7 @@
                 <article class="about-card" data-animate>
                     <h3>Profil professionnel</h3>
                     <p>
-                        Administrateur Réseau &amp; Sécurité IT, je conçois, sécurise et supervise des infrastructures télécoms et informatiques résilientes pour le Groupe Sonatel. Rigoureux et orienté service, je détecte rapidement les anomalies, anticipe les incidents et pilote les plans d'amélioration continue. Mes scripts Python dédiés au reporting optimisent les performances et fluidifient la communication entre équipes.
+                        Administrateur Réseau &amp; Sécurité IT, j'ai conçu, sécurisé et supervisé des infrastructures télécoms et informatiques résilientes pour le Groupe Sonatel. Rigoureux et orienté service, je détecte rapidement les anomalies, anticipe les incidents et pilote les plans d'amélioration continue. Mes scripts Python dédiés au reporting ont optimisé les performances et fluidifié la communication entre équipes.
                     </p>
                 </article>
                 <!-- Carte 2 : Informations personnelles -->
@@ -423,15 +433,17 @@
                 </article>
                 <article class="skill-card" data-animate>
                     <span class="skill-icon" aria-hidden="true">💻</span>
-                    <h3>Systèmes &amp; outils</h3>
-                    <p>Administration multi-plateforme et outils collaboratifs du quotidien.</p>
+                    <h3>Systèmes &amp; développement</h3>
+                    <p>Administration multi-plateforme et développement d'applications web complètes, du front-end à la base de données.</p>
                     <ul class="chip-list">
                         <li>Windows</li>
                         <li>Linux</li>
                         <li>HTML/CSS/JS</li>
+                        <li>Next.js</li>
+                        <li>Node.js</li>
+                        <li>Flask</li>
                         <li>MySQL</li>
-                        <li>Excel</li>
-                        <li>Outlook</li>
+                        <li>PostgreSQL</li>
                     </ul>
                 </article>
             </div>
@@ -449,11 +461,10 @@
                 <p>Parcours professionnel</p>
             </div>
             <div class="timeline">
-                <!-- Expérience 1 : Poste actuel chez Sonatel -->
-                <article class="timeline-item is-current" data-animate>
+                <!-- Expérience 1 : Sonatel (contrat achevé le 18 avril 2026) -->
+                <article class="timeline-item" data-animate>
                     <span class="timeline-date">
-                        <time datetime="2024-04">Avril 2024</time> – Aujourd'hui · Pikine, Dakar
-                        <span class="badge-now">En poste</span>
+                        <time datetime="2024-04">Avril 2024</time> – <time datetime="2026-04-18">18 avril 2026</time> · Pikine, Dakar
                     </span>
                     <h3>Superviseur Maintenance – Groupe Sonatel</h3>
                     <ul>
@@ -506,6 +517,7 @@
             <div class="filters" role="group" aria-label="Filtrer les projets par catégorie">
                 <button type="button" class="filter is-active" data-filter="all" aria-pressed="true">Tous</button>
                 <button type="button" class="filter" data-filter="tech" aria-pressed="false">Technique</button>
+                <button type="button" class="filter" data-filter="web" aria-pressed="false">Web</button>
                 <button type="button" class="filter" data-filter="mobile" aria-pressed="false">Mobile</button>
                 <button type="button" class="filter" data-filter="digital" aria-pressed="false">Digital</button>
             </div>
@@ -533,18 +545,82 @@
                         <li>UX mobile</li>
                     </ul>
                 </article>
-                <!-- Projet 3 : Branding parfums -->
+                <!-- Projet 3 : Plateforme d'annonces automobiles -->
+                <article class="project-card" data-category="web" data-animate>
+                    <span class="project-icon" aria-hidden="true">🚗</span>
+                    <h3>Auto Dakar</h3>
+                    <p>Plateforme d'annonces automobiles : catalogue par marque, espace concessionnaires vérifiés, back-office administrateur et gestion des photos sur le cloud.</p>
+                    <ul class="chip-list">
+                        <li>Next.js 15</li>
+                        <li>TypeScript</li>
+                        <li>PostgreSQL</li>
+                        <li>Prisma</li>
+                        <li>NextAuth</li>
+                        <li>Cloudinary</li>
+                    </ul>
+                </article>
+                <!-- Projet 4 : E-commerce médical -->
+                <article class="project-card" data-category="web" data-animate>
+                    <span class="project-icon" aria-hidden="true">🩺</span>
+                    <h3>ORA Business</h3>
+                    <p>Boutique en ligne de consommables médicaux avec back-office sécurisé : authentification par sessions, mots de passe hachés, limitation de débit et en-têtes de sécurité HTTP.</p>
+                    <ul class="chip-list">
+                        <li>Node.js</li>
+                        <li>Express</li>
+                        <li>SQLite</li>
+                        <li>bcrypt</li>
+                        <li>Helmet</li>
+                        <li>Rate limiting</li>
+                    </ul>
+                </article>
+                <!-- Projet 5 : Calcul d'itinéraire -->
+                <article class="project-card" data-category="tech" data-animate>
+                    <span class="project-icon" aria-hidden="true">🗺️</span>
+                    <h3>Calculateur d'itinéraires</h3>
+                    <p>Application Flask de calcul de trajets avec carte interactive : distance, durée et feuille de route. Deux moteurs interchangeables (OpenStreetMap ou Google Directions), la clé d'API restant côté serveur.</p>
+                    <ul class="chip-list">
+                        <li>Python</li>
+                        <li>Flask</li>
+                        <li>Leaflet</li>
+                        <li>OSRM</li>
+                        <li>Google Directions</li>
+                    </ul>
+                </article>
+                <!-- Projet 6 : Plateforme de streaming -->
+                <article class="project-card" data-category="web" data-animate>
+                    <span class="project-icon" aria-hidden="true">🎬</span>
+                    <h3>Bokk – plateforme de streaming</h3>
+                    <p>Interface de streaming vidéo inspirée des grands services de VOD, avec catalogue, navigation par catégories et console d'administration du contenu.</p>
+                    <ul class="chip-list">
+                        <li>HTML/CSS</li>
+                        <li>JavaScript</li>
+                        <li>UI/UX</li>
+                    </ul>
+                </article>
+                <!-- Projet 7 : Carte d'invitation interactive -->
+                <article class="project-card" data-category="web" data-animate>
+                    <span class="project-icon" aria-hidden="true">💌</span>
+                    <h3>Carte d'invitation en ligne</h3>
+                    <p>Invitation animée et personnalisable à partager par simple lien, pensée pour une lecture parfaite sur mobile.</p>
+                    <ul class="chip-list">
+                        <li>HTML/CSS</li>
+                        <li>Animations</li>
+                        <li>Responsive</li>
+                    </ul>
+                </article>
+                <!-- Projet 8 : Branding parfums -->
                 <article class="project-card" data-category="digital" data-animate>
                     <span class="project-icon" aria-hidden="true">🌸</span>
                     <h3>Maison Riwaha Ndakaru</h3>
-                    <p>Création de l'identité de marque, design packaging et stratégie digitale pour une ligne de parfums locale.</p>
+                    <p>Identité de marque, design packaging et stratégie digitale pour une ligne de parfums locale, accompagnés d'un site vitrine sur mesure.</p>
                     <ul class="chip-list">
                         <li>Branding</li>
                         <li>Packaging</li>
+                        <li>Site vitrine</li>
                         <li>Social media</li>
                     </ul>
                 </article>
-                <!-- Projet 4 : Association caritative -->
+                <!-- Projet 9 : Association caritative -->
                 <article class="project-card" data-category="digital" data-animate>
                     <span class="project-icon" aria-hidden="true">🤝</span>
                     <h3>Dalal Jaam Donation</h3>
