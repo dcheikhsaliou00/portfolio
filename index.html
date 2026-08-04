@@ -23,7 +23,7 @@
     <meta name="description" content="Portfolio de Cheikh Saliou Diaw, Administrateur Réseau & Sécurité IT passé par le Groupe Sonatel, spécialisé en supervision NOC/SOC, automatisation Python et infrastructures télécoms sécurisées.">
     <meta name="author" content="Cheikh Saliou Diaw">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://ton-domaine-ou-github-pages.com">
+    <link rel="canonical" href="https://dcheikhsaliou00.github.io/portfolio/">
 
     <!-- ============================================================
          OPEN GRAPH — APERÇU SUR LES RÉSEAUX SOCIAUX
@@ -35,15 +35,15 @@
     <meta property="og:locale" content="fr_FR">
     <meta property="og:title" content="Portfolio | Cheikh Saliou Diaw">
     <meta property="og:description" content="Administrateur Réseau & Sécurité IT, supervision temps réel et automatisation Python.">
-    <meta property="og:url" content="https://ton-domaine-ou-github-pages.com">
-    <meta property="og:image" content="https://ton-domaine-ou-github-pages.com/assets/cheikh-saliou-diaw.jpg">
+    <meta property="og:url" content="https://dcheikhsaliou00.github.io/portfolio/">
+    <meta property="og:image" content="https://dcheikhsaliou00.github.io/portfolio/cheikh-saliou-diaw.jpg">
     <meta property="og:image:alt" content="Portrait de Cheikh Saliou Diaw">
 
     <!-- Twitter / X : aperçu avec grande image -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Portfolio | Cheikh Saliou Diaw">
     <meta name="twitter:description" content="Administrateur Réseau & Sécurité IT, supervision temps réel et automatisation Python.">
-    <meta name="twitter:image" content="https://ton-domaine-ou-github-pages.com/assets/cheikh-saliou-diaw.jpg">
+    <meta name="twitter:image" content="https://dcheikhsaliou00.github.io/portfolio/cheikh-saliou-diaw.jpg">
 
     <!-- ============================================================
          DONNÉES STRUCTURÉES JSON-LD — SEO AVANCÉ
@@ -56,7 +56,7 @@
         "@type": "Person",
         "name": "Cheikh Saliou Diaw",
         "jobTitle": "Administrateur Réseau & Sécurité IT",
-        "image": "https://ton-domaine-ou-github-pages.com/assets/cheikh-saliou-diaw.jpg",
+        "image": "https://dcheikhsaliou00.github.io/portfolio/cheikh-saliou-diaw.jpg",
         "hasOccupation": {
             "@type": "Occupation",
             "name": "Administrateur Réseau & Sécurité IT",
@@ -78,7 +78,7 @@
             "Automatisation Python"
         ],
         "knowsLanguage": ["fr", "en", "wo"],
-        "url": "https://ton-domaine-ou-github-pages.com",
+        "url": "https://dcheikhsaliou00.github.io/portfolio/",
         "email": "dcheikhsaliou@gmail.com",
         "telephone": "+221780140984",
         "address": {
@@ -109,6 +109,30 @@
                 document.documentElement.dataset.theme = 'dark';
             }
         })();
+
+        /* ------------------------------------------------------------
+           SECOURS POUR LE PORTRAIT
+           Selon l'hébergement, les images peuvent se trouver dans
+           assets/ ou à la racine. Cette fonction essaie chaque chemin
+           l'un après l'autre jusqu'à ce que l'un fonctionne, puis
+           s'arrête (this.onerror = null) pour éviter toute boucle.
+           Définie ici, dans le <head>, car une erreur de chargement
+           peut survenir avant l'exécution de script.js (defer).
+           ------------------------------------------------------------ */
+        window.portraitFallback = function (img) {
+            var chemins = [
+                'cheikh-saliou-diaw.jpg',
+                'assets/cheikh-saliou-diaw.svg',
+                'cheikh-saliou-diaw.svg'
+            ];
+            var i = Number(img.dataset.essai || 0);
+            if (i < chemins.length) {
+                img.dataset.essai = i + 1;
+                img.src = chemins[i];
+            } else {
+                img.onerror = null; // plus rien à tenter
+            }
+        };
     </script>
 
     <!-- ============================================================
@@ -276,11 +300,10 @@
             <!-- Colonne droite : carte de profil rapide avec portrait -->
             <aside class="hero-aside" aria-labelledby="profil-heading" data-animate>
                 <div class="portrait-frame">
-                    <!-- Si la photo ne se charge pas (chemin cassé, fichier
-                         manquant), onerror bascule sur le visuel SVG de
-                         secours plutôt que d'afficher une image brisée.
-                         this.onerror=null évite une boucle infinie si le
-                         fichier de secours manque lui aussi. -->
+                    <!-- Si la photo ne se charge pas (fichier à la racine
+                         plutôt que dans assets/, chemin cassé…), la
+                         fonction portraitFallback définie dans le <head>
+                         essaie les autres emplacements connus. -->
                     <img
                         src="assets/cheikh-saliou-diaw.jpg"
                         alt="Portrait de Cheikh Saliou Diaw"
@@ -288,7 +311,7 @@
                         height="1024"
                         fetchpriority="high"
                         decoding="async"
-                        onerror="this.onerror=null; this.src='assets/cheikh-saliou-diaw.svg';"
+                        onerror="portraitFallback(this)"
                     >
                 </div>
                 <div class="aside-content">
@@ -586,27 +609,37 @@
                         <li>Google Directions</li>
                     </ul>
                 </article>
-                <!-- Projet 6 : Plateforme de streaming -->
+                <!-- Projet 6 : Abonnements streaming partagés -->
                 <article class="project-card" data-category="web" data-animate>
                     <span class="project-icon" aria-hidden="true">🎬</span>
-                    <h3>Bokk – plateforme de streaming</h3>
-                    <p>Interface de streaming vidéo inspirée des grands services de VOD, avec catalogue, navigation par catégories et console d'administration du contenu.</p>
+                    <h3>Bokk – abonnements streaming partagés</h3>
+                    <p>Site de vente d'accès partagés à Netflix, Prime Video et Spotify à Dakar : grille tarifaire en FCFA, parcours d'achat en trois étapes, commande via WhatsApp et back-office de gestion.</p>
                     <ul class="chip-list">
                         <li>HTML/CSS</li>
                         <li>JavaScript</li>
                         <li>UI/UX</li>
+                        <li>WhatsApp</li>
                     </ul>
+                    <a class="project-link" href="https://dcheikhsaliou00.github.io/netflix/" target="_blank" rel="noopener noreferrer">
+                        Voir la démo
+                        <span aria-hidden="true">↗</span>
+                    </a>
                 </article>
                 <!-- Projet 7 : Carte d'invitation interactive -->
                 <article class="project-card" data-category="web" data-animate>
                     <span class="project-icon" aria-hidden="true">💌</span>
                     <h3>Carte d'invitation en ligne</h3>
-                    <p>Invitation animée et personnalisable à partager par simple lien, pensée pour une lecture parfaite sur mobile.</p>
+                    <p>Invitation interactive à partager par simple lien : réponse du destinataire, choix du jour et de l'heure, puis confirmation transmise via WhatsApp. Pensée pour une lecture parfaite sur mobile.</p>
                     <ul class="chip-list">
                         <li>HTML/CSS</li>
+                        <li>JavaScript</li>
                         <li>Animations</li>
                         <li>Responsive</li>
                     </ul>
+                    <a class="project-link" href="https://dcheikhsaliou00.github.io/invitation/" target="_blank" rel="noopener noreferrer">
+                        Voir la démo
+                        <span aria-hidden="true">↗</span>
+                    </a>
                 </article>
                 <!-- Projet 8 : Branding parfums -->
                 <article class="project-card" data-category="digital" data-animate>
