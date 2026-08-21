@@ -14,8 +14,9 @@ const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)
 /* ============================================================
    1. THÈME CLAIR / SOMBRE
    Le thème initial est déjà posé sur <html> par le script inline
-   du <head> (anti-flash). Ici on gère seulement la bascule et
-   la mémorisation dans localStorage.
+   du <head> (anti-flash). Ici on gère la bascule, la mémorisation
+   et — sur les navigateurs compatibles — une révélation en cercle
+   partant du bouton, via la View Transitions API.
    ============================================================ */
 
 function initTheme() {
@@ -32,7 +33,7 @@ function initTheme() {
         if (meta) meta.setAttribute('content', isLight ? '#ffffff' : '#0b0b10');
     };
 
-    toggle.addEventListener('click', () => {
+    const appliquer = () => {
         const next = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
         document.documentElement.dataset.theme = next;
         try {
@@ -42,6 +43,26 @@ function initTheme() {
                pour la session en cours. */
         }
         syncButton();
+    };
+
+    toggle.addEventListener('click', () => {
+        const transitionsSupportees =
+            typeof document.startViewTransition === 'function' && !prefersReducedMotion;
+
+        if (!transitionsSupportees) {
+            appliquer(); // bascule instantanée, aucun message d'erreur
+            return;
+        }
+
+        // Le cercle part du centre du bouton : la révélation semble
+        // émaner du geste de l'utilisateur.
+        const rect = toggle.getBoundingClientRect();
+        const cx = ((rect.left + rect.width / 2) / window.innerWidth) * 100;
+        const cy = ((rect.top + rect.height / 2) / window.innerHeight) * 100;
+        document.documentElement.style.setProperty('--tx', cx.toFixed(1) + '%');
+        document.documentElement.style.setProperty('--ty', cy.toFixed(1) + '%');
+
+        document.startViewTransition(appliquer);
     });
 
     syncButton();
@@ -100,20 +121,29 @@ function initMobileNav() {
 
 /* ============================================================
    3. EFFETS LIÉS AU DÉFILEMENT
-   Barre de progression, navbar compacte et bouton « retour en
-   haut » partagent UN SEUL écouteur de scroll, throttlé avec
-   requestAnimationFrame pour ne pas saturer le thread principal.
+   Barre de progression, navbar compacte, bouton « retour en
+   haut », parallaxe du portrait et tracé de la timeline
+   partagent UN SEUL écouteur de scroll, throttlé avec
+   requestAnimationFrame.
+
+   Pourquoi un seul : chaque écouteur de scroll supplémentaire
+   s'exécute à chaque pixel défilé. En les regroupant, on lit la
+   position une fois par image (60 fois par seconde maximum) au
+   lieu de plusieurs centaines de fois par seconde.
    ============================================================ */
 
 function initScrollEffects() {
     const progressBar = document.querySelector('.scroll-progress span');
     const navbar = document.querySelector('.navbar');
     const backToTop = document.querySelector('.back-to-top');
+    const portrait = document.querySelector('.portrait-frame img');
+    const timeline = document.querySelector('.timeline');
     let ticking = false;
 
     const update = () => {
         const scrollTop = window.scrollY;
-        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        const viewport = window.innerHeight;
+        const maxScroll = document.documentElement.scrollHeight - viewport;
 
         if (progressBar) {
             // Math.min évite un dépassement de 100 % dû aux arrondis
@@ -130,10 +160,36 @@ function initScrollEffects() {
             backToTop.classList.toggle('visible', scrollTop > 300);
         }
 
+        // Parallaxe : le portrait se décale plus lentement que la
+        // page. Amplitude volontairement faible (±18 px) — au-delà,
+        // l'effet devient tape-à-l'œil et provoque du mal-être.
+        if (portrait && !prefersReducedMotion) {
+            const decalage = Math.max(-18, Math.min(18, scrollTop * 0.06));
+            portrait.style.setProperty('--shift', decalage.toFixed(1) + 'px');
+        }
+
+        // Tracé de la timeline : la ligne se remplit à mesure que
+        // la section traverse le viewport.
+        if (timeline && !prefersReducedMotion) {
+            const rect = timeline.getBoundingClientRect();
+            const parcouru = (viewport * 0.75) - rect.top;
+            const progression = Math.max(0, Math.min(1, parcouru / rect.height));
+            timeline.style.setProperty('--draw', progression.toFixed(3));
+        }
+
         ticking = false;
     };
 
     window.addEventListener('scroll', () => {
+        if (!ticking) {
+            ticking = true;
+            window.requestAnimationFrame(update);
+        }
+    }, { passive: true });
+
+    // Le redimensionnement change la hauteur du document : on
+    // recalcule, sinon la barre de progression devient fausse.
+    window.addEventListener('resize', () => {
         if (!ticking) {
             ticking = true;
             window.requestAnimationFrame(update);
@@ -153,33 +209,66 @@ function initScrollEffects() {
 }
 
 /* ============================================================
-   4. APPARITION PROGRESSIVE AU SCROLL
-   Les éléments marqués [data-animate] apparaissent en fondu
-   lorsqu'ils entrent dans le viewport.
+   4. RÉVÉLATION AU SCROLL (avec cascade)
+   Les éléments [data-animate] apparaissent en entrant dans le
+   viewport. Ceux qui partagent le même parent (les cartes d'une
+   grille) sont décalés les uns après les autres : c'est ce
+   décalage qui donne une impression de fluidité plutôt qu'un
+   bloc entier qui surgit d'un coup.
    ============================================================ */
 
 function initScrollAnimations() {
     const elements = document.querySelectorAll('[data-animate]');
     if (!elements.length) return;
 
-    // Mouvement réduit ou navigateur ancien : on affiche tout directement
+    // Mouvement réduit ou navigateur ancien : tout est affiché
+    // immédiatement, sans dépendre d'un observateur.
     if (prefersReducedMotion || !('IntersectionObserver' in window)) {
-        elements.forEach((el) => el.classList.add('visible'));
+        elements.forEach((el) => el.classList.add('visible', 'motion-done'));
+        document.documentElement.style.setProperty('--draw', '1');
         return;
     }
 
-    const observer = new IntersectionObserver((entries, obs) => {
-        entries.forEach((entry) => {
-            if (!entry.isIntersecting) return;
-            entry.target.classList.add('visible');
-            obs.unobserve(entry.target); // une seule fois par élément
-        });
-    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    const STAGGER = 90;      // ms entre deux éléments d'une même grille
+    const CASCADE_MAX = 450; // durée totale maximale d'une cascade
 
-    elements.forEach((el) => {
-        el.classList.add('fade-in');
-        observer.observe(el);
-    });
+    const observer = new IntersectionObserver((entries, obs) => {
+        // On regroupe par parent pour calculer la cascade sur les
+        // seuls éléments qui apparaissent DANS LA MÊME passe.
+        const parEntree = new Map();
+
+        entries.filter((e) => e.isIntersecting).forEach((entry) => {
+            const parent = entry.target.parentElement;
+            if (!parEntree.has(parent)) parEntree.set(parent, []);
+            parEntree.get(parent).push(entry.target);
+        });
+
+        parEntree.forEach((groupe) => {
+            // Ordre du DOM, pour que la cascade suive la lecture
+            groupe.sort((a, b) =>
+                a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1
+            );
+
+            // Le pas est reduit sur les grandes grilles : avec 9 projets
+            // et 90 ms fixes, la derniere carte attendrait 720 ms avant
+            // meme de commencer. On plafonne la cascade a 450 ms au total.
+            const pas = Math.min(STAGGER, CASCADE_MAX / Math.max(1, groupe.length - 1));
+
+            groupe.forEach((el, i) => {
+                el.style.setProperty('--delay', Math.round(i * pas) + 'ms');
+                el.classList.add('visible');
+
+                // Une fois l'animation finie on libère le GPU et on
+                // remet le délai à zéro, sinon un futur survol le
+                // réutiliserait et paraîtrait « collant ».
+                setTimeout(() => el.classList.add('motion-done'), 900 + i * pas);
+
+                obs.unobserve(el);
+            });
+        });
+    }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+    elements.forEach((el) => observer.observe(el));
 }
 
 /* ============================================================
@@ -334,7 +423,21 @@ function initProjectFilters() {
             let visibleCount = 0;
             cards.forEach((card) => {
                 const match = value === 'all' || card.dataset.category === value;
+                const etaitCachee = card.classList.contains('is-hidden');
                 card.classList.toggle('is-hidden', !match);
+
+                // Rejoue l'animation d'entrée sur les cartes qui
+                // réapparaissent. Retirer puis remettre la classe ne
+                // suffit pas : le navigateur regroupe les deux
+                // changements dans la même image et l'animation ne
+                // redémarre pas. offsetWidth force un recalcul de
+                // style entre les deux — c'est le déclencheur.
+                if (match && etaitCachee && !prefersReducedMotion) {
+                    card.classList.remove('is-entering');
+                    void card.offsetWidth;
+                    card.classList.add('is-entering');
+                }
+
                 if (match) visibleCount += 1;
             });
 
@@ -507,6 +610,59 @@ function initFooterYear() {
     if (yearSpan) yearSpan.textContent = new Date().getFullYear();
 }
 
+
+/* ============================================================
+   12. INCLINAISON 3D DES CARTES
+   Au survol, la carte s'incline légèrement vers le curseur et un
+   reflet la suit. L'effet n'est activé que sur les appareils
+   dotés d'un vrai pointeur : sur écran tactile il n'y a pas de
+   survol, l'inclinaison resterait figée après un appui.
+   ============================================================ */
+
+function initTilt() {
+    if (prefersReducedMotion) return;
+
+    // pointer:fine = souris ou trackpad, pas un doigt
+    if (!window.matchMedia('(pointer: fine)').matches) return;
+
+    const cartes = document.querySelectorAll('.project-card, .skill-card');
+    const AMPLITUDE = 6; // degrés maximum — au-delà, l'effet fait « jouet »
+
+    cartes.forEach((carte) => {
+        carte.classList.add('tilt');
+
+        carte.addEventListener('pointermove', (event) => {
+            const rect = carte.getBoundingClientRect();
+
+            // Position du curseur ramenée dans l'intervalle -0.5 … +0.5
+            const x = (event.clientX - rect.left) / rect.width - 0.5;
+            const y = (event.clientY - rect.top) / rect.height - 0.5;
+
+            carte.classList.add('is-tilting');
+            // L'axe X est inversé : bouger le curseur vers le bas doit
+            // faire basculer le haut de la carte vers l'arrière.
+            carte.style.setProperty('--ry', (x * AMPLITUDE).toFixed(2) + 'deg');
+            carte.style.setProperty('--rx', (-y * AMPLITUDE).toFixed(2) + 'deg');
+            carte.style.setProperty('--lift', '-6px');
+
+            // Position du reflet, en pourcentage de la carte
+            carte.style.setProperty('--mx', ((x + 0.5) * 100).toFixed(1) + '%');
+            carte.style.setProperty('--my', ((y + 0.5) * 100).toFixed(1) + '%');
+        });
+
+        const reset = () => {
+            // On retire is-tilting AVANT de remettre les valeurs à
+            // zéro : la transition CSS reprend et le retour est doux.
+            carte.classList.remove('is-tilting');
+            carte.style.setProperty('--rx', '0deg');
+            carte.style.setProperty('--ry', '0deg');
+            carte.style.setProperty('--lift', '0px');
+        };
+
+        carte.addEventListener('pointerleave', reset);
+        carte.addEventListener('pointercancel', reset);
+    });
+}
 /* ============================================================
    INITIALISATION
    Le script est chargé avec defer : le DOM est donc déjà prêt.
@@ -516,6 +672,7 @@ initTheme();
 initMobileNav();
 initScrollEffects();
 initScrollAnimations();
+initTilt();
 initScrollSpy();
 initCounters();
 initTypingEffect();

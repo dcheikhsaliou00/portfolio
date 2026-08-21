@@ -100,6 +100,12 @@
          l'éclair blanc au chargement.
          ============================================================ -->
     <script>
+        /* Marque la page comme 'JavaScript actif'. Tout l'état initial
+           masqué des animations est conditionné à cette classe : si JS
+           est absent ou plante, le contenu reste visible au lieu de
+           rester bloqué à opacity:0. */
+        document.documentElement.classList.add('js');
+
         (function () {
             try {
                 var stored = localStorage.getItem('theme');
@@ -250,7 +256,7 @@
         <div class="hero-wrapper">
 
             <!-- Colonne gauche : présentation textuelle -->
-            <div class="hero-content" data-animate>
+            <div class="hero-content">
                 <span class="hero-badge">
                     <span class="status-dot" aria-hidden="true"></span>
                     Hello, je suis
@@ -298,7 +304,7 @@
             </div>
 
             <!-- Colonne droite : carte de profil rapide avec portrait -->
-            <aside class="hero-aside" aria-labelledby="profil-heading" data-animate>
+            <aside class="hero-aside" aria-labelledby="profil-heading" data-animate="scale">
                 <div class="portrait-frame">
                     <!-- Si la photo ne se charge pas (fichier à la racine
                          plutôt que dans assets/, chemin cassé…), la
@@ -369,7 +375,7 @@
              3. La formation académique
         -->
         <section id="apropos" class="section about" aria-labelledby="apropos-titre">
-            <div class="section-header">
+            <div class="section-header" data-animate>
                 <h2 id="apropos-titre">À propos</h2>
                 <p>Qui suis-je&nbsp;?</p>
             </div>
@@ -411,7 +417,7 @@
              pour un balayage visuel rapide par les recruteurs.
         -->
         <section id="competences" class="section skills" aria-labelledby="competences-titre">
-            <div class="section-header">
+            <div class="section-header" data-animate>
                 <h2 id="competences-titre">Compétences</h2>
                 <p>Ce que je maîtrise</p>
             </div>
@@ -479,13 +485,13 @@
              sont générés en CSS via ::before.
         -->
         <section id="experiences" class="section timeline-section" aria-labelledby="experiences-titre">
-            <div class="section-header">
+            <div class="section-header" data-animate>
                 <h2 id="experiences-titre">Expériences</h2>
                 <p>Parcours professionnel</p>
             </div>
             <div class="timeline">
                 <!-- Expérience 1 : Sonatel (contrat achevé le 18 avril 2026) -->
-                <article class="timeline-item" data-animate>
+                <article class="timeline-item" data-animate="left">
                     <span class="timeline-date">
                         <time datetime="2024-04">Avril 2024</time> – <time datetime="2026-04-18">18 avril 2026</time> · Pikine, Dakar
                     </span>
@@ -498,7 +504,7 @@
                     </ul>
                 </article>
                 <!-- Expérience 2 : Stage chez SENELEC -->
-                <article class="timeline-item" data-animate>
+                <article class="timeline-item" data-animate="left">
                     <span class="timeline-date">
                         <time datetime="2024-01">Janvier 2024</time> – <time datetime="2024-02">Février 2024</time> · Dakar
                     </span>
@@ -510,7 +516,7 @@
                     </ul>
                 </article>
                 <!-- Expérience 3 : Premier stage chez Sonatel -->
-                <article class="timeline-item" data-animate>
+                <article class="timeline-item" data-animate="left">
                     <span class="timeline-date">
                         <time datetime="2023-09">Septembre 2023</time> – <time datetime="2023-11">Novembre 2023</time> · Dakar
                     </span>
@@ -531,7 +537,7 @@
              Les data-tags servent au filtrage par catégorie (script.js).
         -->
         <section id="projets" class="section projects" aria-labelledby="projets-titre">
-            <div class="section-header">
+            <div class="section-header" data-animate>
                 <h2 id="projets-titre">Projets &amp; réalisations</h2>
                 <p>Ce que j'ai accompli</p>
             </div>
@@ -547,7 +553,7 @@
 
             <div class="project-grid">
                 <!-- Projet 1 : Automatisation reporting -->
-                <article class="project-card" data-category="tech" data-animate>
+                <article class="project-card" data-category="tech" data-animate="scale">
                     <span class="project-icon" aria-hidden="true">🐍</span>
                     <h3>Automatisation du reporting Diagnet</h3>
                     <p>Scripts Python pour capturer les graphiques QoS, analyser les données et envoyer automatiquement les rapports via Outlook.</p>
@@ -558,7 +564,7 @@
                     </ul>
                 </article>
                 <!-- Projet 2 : Application Flutter -->
-                <article class="project-card" data-category="mobile" data-animate>
+                <article class="project-card" data-category="mobile" data-animate="scale">
                     <span class="project-icon" aria-hidden="true">📱</span>
                     <h3>Application Flutter de transfert d'argent</h3>
                     <p>Application mobile sécurisée facilitant les transferts Sénégal–Mauritanie avec une expérience utilisateur fluide.</p>
@@ -569,7 +575,7 @@
                     </ul>
                 </article>
                 <!-- Projet 3 : Plateforme d'annonces automobiles -->
-                <article class="project-card" data-category="web" data-animate>
+                <article class="project-card" data-category="web" data-animate="scale">
                     <span class="project-icon" aria-hidden="true">🚗</span>
                     <h3>Auto Dakar</h3>
                     <p>Plateforme d'annonces automobiles : catalogue par marque, espace concessionnaires vérifiés, back-office administrateur et gestion des photos sur le cloud.</p>
@@ -583,7 +589,7 @@
                     </ul>
                 </article>
                 <!-- Projet 4 : E-commerce médical -->
-                <article class="project-card" data-category="web" data-animate>
+                <article class="project-card" data-category="web" data-animate="scale">
                     <span class="project-icon" aria-hidden="true">🩺</span>
                     <h3>ORA Business</h3>
                     <p>Boutique en ligne de consommables médicaux avec back-office sécurisé : authentification par sessions, mots de passe hachés, limitation de débit et en-têtes de sécurité HTTP.</p>
@@ -597,7 +603,7 @@
                     </ul>
                 </article>
                 <!-- Projet 5 : Calcul d'itinéraire -->
-                <article class="project-card" data-category="tech" data-animate>
+                <article class="project-card" data-category="tech" data-animate="scale">
                     <span class="project-icon" aria-hidden="true">🗺️</span>
                     <h3>Calculateur d'itinéraires</h3>
                     <p>Application Flask de calcul de trajets avec carte interactive : distance, durée et feuille de route. Deux moteurs interchangeables (OpenStreetMap ou Google Directions), la clé d'API restant côté serveur.</p>
@@ -610,7 +616,7 @@
                     </ul>
                 </article>
                 <!-- Projet 6 : Abonnements streaming partagés -->
-                <article class="project-card" data-category="web" data-animate>
+                <article class="project-card" data-category="web" data-animate="scale">
                     <span class="project-icon" aria-hidden="true">🎬</span>
                     <h3>Bokk – abonnements streaming partagés</h3>
                     <p>Site de vente d'accès partagés à Netflix, Prime Video et Spotify à Dakar : grille tarifaire en FCFA, parcours d'achat en trois étapes, commande via WhatsApp et back-office de gestion.</p>
@@ -626,7 +632,7 @@
                     </a>
                 </article>
                 <!-- Projet 7 : Carte d'invitation interactive -->
-                <article class="project-card" data-category="web" data-animate>
+                <article class="project-card" data-category="web" data-animate="scale">
                     <span class="project-icon" aria-hidden="true">💌</span>
                     <h3>Carte d'invitation en ligne</h3>
                     <p>Invitation interactive à partager par simple lien : réponse du destinataire, choix du jour et de l'heure, puis confirmation transmise via WhatsApp. Pensée pour une lecture parfaite sur mobile.</p>
@@ -642,7 +648,7 @@
                     </a>
                 </article>
                 <!-- Projet 8 : Branding parfums -->
-                <article class="project-card" data-category="digital" data-animate>
+                <article class="project-card" data-category="digital" data-animate="scale">
                     <span class="project-icon" aria-hidden="true">🌸</span>
                     <h3>Maison Riwaha Ndakaru</h3>
                     <p>Identité de marque, design packaging et stratégie digitale pour une ligne de parfums locale, accompagnés d'un site vitrine sur mesure.</p>
@@ -654,7 +660,7 @@
                     </ul>
                 </article>
                 <!-- Projet 9 : Association caritative -->
-                <article class="project-card" data-category="digital" data-animate>
+                <article class="project-card" data-category="digital" data-animate="scale">
                     <span class="project-icon" aria-hidden="true">🤝</span>
                     <h3>Dalal Jaam Donation</h3>
                     <p>Digitalisation de l'association caritative : collecte de dons, communication et coordination des actions.</p>
@@ -688,7 +694,7 @@
              enverra alors les données en AJAX.
         -->
         <section id="contact" class="section contact" aria-labelledby="contact-titre">
-            <div class="section-header">
+            <div class="section-header" data-animate>
                 <h2 id="contact-titre">Contact</h2>
                 <p>Travaillons ensemble</p>
             </div>

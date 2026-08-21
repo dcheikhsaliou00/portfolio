@@ -1188,18 +1188,328 @@ html[data-theme="light"] .theme-icon-sun {
 }
 
 /* ============================================================
-   ANIMATIONS AU SCROLL
+   SYSTÈME DE MOTION
+   Un seul vocabulaire d'animation pour tout le site : mêmes
+   durées, mêmes courbes, mêmes distances. C'est ce qui distingue
+   un site « animé » d'un site qui a une identité de mouvement.
+
+   Règle de performance : on n'anime QUE transform et opacity.
+   Ce sont les deux seules propriétés que le navigateur traite
+   sur le GPU, sans recalculer la mise en page à chaque image.
+   Animer width, top ou margin ferait chuter le framerate.
    ============================================================ */
 
-.fade-in {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+:root {
+    /* Durées */
+    --dur-fast: 0.25s;
+    --dur-base: 0.55s;
+    --dur-slow: 0.9s;
+
+    /* Courbes d'accélération */
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    /* Distance de départ des révélations */
+    --reveal-shift: 28px;
 }
 
-.fade-in.visible {
+/* ------------------------------------------------------------
+   RÉVÉLATION AU SCROLL
+   L'état de départ dépend de la direction choisie via
+   data-animate="up|left|right|scale". Le délai de cascade est
+   injecté par script.js dans --delay.
+   ------------------------------------------------------------ */
+
+.js [data-animate] {
+    opacity: 0;
+    transition:
+        opacity var(--dur-base) var(--ease-out),
+        transform var(--dur-base) var(--ease-out);
+    transition-delay: var(--delay, 0ms);
+    will-change: transform, opacity;
+}
+
+.js [data-animate=""],
+.js [data-animate="up"]    { transform: translate3d(0, var(--reveal-shift), 0); }
+.js [data-animate="left"]  { transform: translate3d(calc(var(--reveal-shift) * -1.4), 0, 0); }
+.js [data-animate="right"] { transform: translate3d(calc(var(--reveal-shift) * 1.4), 0, 0); }
+.js [data-animate="scale"] { transform: scale(0.94); }
+
+[data-animate].visible {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0) scale(1);
+}
+
+/* Une fois révélé, on libère la mémoire GPU réservée */
+[data-animate].motion-done {
+    will-change: auto;
+    transition-delay: 0ms;
+}
+
+/* ------------------------------------------------------------
+   CHORÉGRAPHIE D'ENTRÉE DU HERO
+   Le hero ne s'anime pas au scroll : il est déjà visible. Ses
+   éléments entrent en cascade dès le chargement, ce qui donne
+   le rythme de toute la page.
+   ------------------------------------------------------------ */
+
+.js .hero-content > * {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+    animation: heroIn 0.7s var(--ease-out) forwards;
+}
+
+/* Chaque sélecteur est préfixé par .js : sans cela,
+   la propriété raccourcie "animation" de la règle ci-dessus
+   (spécificité 0,2,0) écraserait animation-delay sur les sélecteurs
+   de type comme h1 et p (0,1,1), qui démarreraient sans décalage. */
+.js .hero-content > .hero-badge   { animation-delay: 0.10s; }
+.js .hero-content > h1            { animation-delay: 0.18s; }
+.js .hero-content > .hero-role    { animation-delay: 0.26s; }
+.js .hero-content > p             { animation-delay: 0.34s; }
+.js .hero-content > .hero-actions { animation-delay: 0.42s; }
+.js .hero-content > .hero-info    { animation-delay: 0.50s; }
+
+@keyframes heroIn {
+    to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+/* ------------------------------------------------------------
+   HALOS DU HERO — DÉRIVE LENTE
+   Deux halos qui dérivent en boucle, très lents (18s et 24s) et
+   désynchronisés : le fond respire sans attirer l'œil ni laisser
+   deviner la boucle.
+   ------------------------------------------------------------ */
+
+.hero::before,
+.hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background: radial-gradient(circle at 20% 25%, rgba(var(--accent-rgb), var(--glow-soft)), transparent 45%);
+    animation: drift 18s ease-in-out infinite alternate;
+}
+
+.hero::after {
+    background: radial-gradient(circle at 80% 75%, rgba(var(--accent-rgb), var(--glow-soft)), transparent 45%);
+    animation-duration: 24s;
+    animation-direction: alternate-reverse;
+}
+
+@keyframes drift {
+    from { transform: translate3d(-3%, -2%, 0) scale(1); }
+    to   { transform: translate3d(3%, 2%, 0) scale(1.12); }
+}
+
+/* Le contenu doit passer au-dessus des halos */
+.hero-wrapper,
+.stats {
+    position: relative;
+    z-index: 1;
+}
+
+/* ------------------------------------------------------------
+   INCLINAISON 3D DES CARTES (effet « tilt »)
+   Les angles sont calculés en JS d'après la position du curseur
+   puis injectés dans --rx / --ry. Le CSS ne fait qu'appliquer.
+   ------------------------------------------------------------ */
+
+.tilt {
+    transform: perspective(900px)
+               rotateX(var(--rx, 0deg))
+               rotateY(var(--ry, 0deg))
+               translate3d(0, var(--lift, 0px), 0);
+    transition: transform var(--dur-fast) var(--ease-out);
+    transform-style: preserve-3d;
+}
+
+/* Pendant le survol la transition est coupée : le mouvement doit
+   suivre le curseur image par image, sans latence. */
+.tilt.is-tilting {
+    transition: none;
+}
+
+/* Reflet qui suit le curseur sur la carte survolée */
+.tilt::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--dur-fast) var(--ease-out);
+    background: radial-gradient(
+        380px circle at var(--mx, 50%) var(--my, 50%),
+        rgba(var(--accent-rgb), 0.14),
+        transparent 42%
+    );
+}
+
+.tilt.is-tilting::after {
+    opacity: 1;
+}
+
+/* Les cartes doivent créer un contexte de positionnement */
+.project-card,
+.skill-card,
+.about-card {
+    position: relative;
+}
+
+/* ------------------------------------------------------------
+   BALAYAGE LUMINEUX SUR LE BOUTON PRINCIPAL
+   overflow:hidden confine le reflet à l'intérieur de la pilule.
+   ------------------------------------------------------------ */
+
+.cta {
+    position: relative;
+    overflow: hidden;
+}
+
+.cta::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -60%;
+    width: 40%;
+    height: 100%;
+    pointer-events: none;
+    transform: skewX(-20deg);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.28), transparent);
+}
+
+.cta:hover::after,
+.cta:focus-visible::after {
+    animation: shine 0.75s var(--ease-out);
+}
+
+@keyframes shine {
+    to { left: 120%; }
+}
+
+/* ------------------------------------------------------------
+   TRACÉ PROGRESSIF DE LA TIMELINE
+   La ligne verticale se dessine de haut en bas au fil du scroll.
+   --draw est mis à jour par script.js (0 → 1).
+   ------------------------------------------------------------ */
+
+.js .timeline::before {
+    transform-origin: top center;
+    transform: scaleY(var(--draw, 1));
+    transition: transform 0.15s linear;
+}
+
+/* Les pastilles de la timeline apparaissent en rebond */
+.js .timeline-item::before {
+    transform: scale(0);
+    transition: transform var(--dur-base) var(--ease-spring);
+    transition-delay: calc(var(--delay, 0ms) + 120ms);
+}
+
+.timeline-item.visible::before {
+    transform: scale(1);
+}
+
+/* ------------------------------------------------------------
+   TITRES DE SECTION — TRAIT QUI SE DÉPLOIE
+   ------------------------------------------------------------ */
+
+.js .section-header h2::after {
+    transform: translateX(-50%) scaleX(0);
+    transform-origin: center;
+    transition: transform var(--dur-slow) var(--ease-out) 0.15s;
+}
+
+.section-header.visible h2::after {
+    transform: translateX(-50%) scaleX(1);
+}
+
+/* ------------------------------------------------------------
+   PASTILLES TECHNOLOGIQUES — CASCADE
+   ------------------------------------------------------------ */
+
+.js .chip-list li {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0);
+    transition:
+        opacity var(--dur-fast) var(--ease-out),
+        transform var(--dur-fast) var(--ease-out);
+}
+
+.visible .chip-list li {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+}
+
+/* Chaque pastille part 55 ms après la précédente */
+.chip-list li:nth-child(1) { transition-delay: 0.300s; }
+.chip-list li:nth-child(2) { transition-delay: 0.355s; }
+.chip-list li:nth-child(3) { transition-delay: 0.410s; }
+.chip-list li:nth-child(4) { transition-delay: 0.465s; }
+.chip-list li:nth-child(5) { transition-delay: 0.520s; }
+.chip-list li:nth-child(6) { transition-delay: 0.575s; }
+.chip-list li:nth-child(7) { transition-delay: 0.630s; }
+.chip-list li:nth-child(8) { transition-delay: 0.685s; }
+
+/* ------------------------------------------------------------
+   ICÔNE DE COMPÉTENCE — ARRIVÉE EN REBOND
+   ------------------------------------------------------------ */
+
+.js .skill-icon {
+    transform: scale(0) rotate(-25deg);
+    transition: transform var(--dur-slow) var(--ease-spring) 0.15s;
+}
+
+.visible .skill-icon {
+    transform: scale(1) rotate(0deg);
+}
+
+/* ------------------------------------------------------------
+   PARALLAXE DU PORTRAIT
+   --shift est calculé au scroll par script.js. Le scale(1.04)
+   compense le décalage pour qu'aucun bord blanc n'apparaisse.
+   ------------------------------------------------------------ */
+
+.portrait-frame img {
+    transform: translate3d(0, var(--shift, 0px), 0) scale(1.04);
+}
+
+.hero-aside:hover .portrait-frame img {
+    transform: translate3d(0, var(--shift, 0px), 0) scale(1.07);
+}
+
+/* ------------------------------------------------------------
+   FILTRES DE PROJETS — RÉAPPARITION
+   Jouée quand une carte revient après un changement de filtre.
+   ------------------------------------------------------------ */
+
+.project-card.is-entering {
+    animation: cardIn var(--dur-base) var(--ease-out) backwards;
+}
+
+@keyframes cardIn {
+    from { opacity: 0; transform: translate3d(0, 14px, 0) scale(0.97); }
+}
+
+/* ------------------------------------------------------------
+   TRANSITION DE THÈME EN CERCLE (View Transitions API)
+   Le nouveau thème se révèle en cercle depuis le bouton.
+   Navigateurs non compatibles : bascule instantanée, sans erreur.
+   ------------------------------------------------------------ */
+
+::view-transition-old(root) {
+    animation: none;
+}
+
+::view-transition-new(root) {
+    animation: circleReveal 0.55s var(--ease-out);
+}
+
+@keyframes circleReveal {
+    from { clip-path: circle(0% at var(--tx, 50%) var(--ty, 50%)); }
+    to   { clip-path: circle(150% at var(--tx, 50%) var(--ty, 50%)); }
 }
 
 /* ============================================================
@@ -1324,11 +1634,17 @@ html[data-theme="light"] .theme-icon-sun {
         grid-template-columns: repeat(2, 1fr);
     }
 }
-
 /* ============================================================
    ACCESSIBILITÉ — MOUVEMENT RÉDUIT
    Si l'utilisateur a activé « réduire les animations » dans son
-   système, on neutralise transitions, animations et scroll fluide.
+   système, tout le mouvement est neutralisé. Ce n'est pas un
+   détail : les animations de parallaxe et de dérive peuvent
+   déclencher nausées et migraines chez les personnes sujettes
+   au mal des transports vestibulaire.
+
+   Principe : on ne se contente pas de raccourcir les durées, on
+   force aussi l'ÉTAT FINAL de chaque effet. Ainsi le contenu
+   reste visible même si le JavaScript ne s'exécute pas.
    ============================================================ */
 
 @media (prefers-reduced-motion: reduce) {
@@ -1341,8 +1657,56 @@ html[data-theme="light"] .theme-icon-sun {
     *::after {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
+        animation-delay: 0ms !important;
         transition-duration: 0.01ms !important;
+        transition-delay: 0ms !important;
         scroll-behavior: auto !important;
+    }
+
+    /* État final forcé : rien ne dépend plus du JavaScript */
+    [data-animate],
+    .hero-content > *,
+    .chip-list li {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    .skill-icon,
+    .timeline-item::before {
+        transform: scale(1) !important;
+    }
+
+    .section-header h2::after {
+        transform: translateX(-50%) scaleX(1) !important;
+    }
+
+    .timeline::before {
+        transform: scaleY(1) !important;
+    }
+
+    .portrait-frame img,
+    .hero-aside:hover .portrait-frame img {
+        transform: none !important;
+    }
+
+    /* Effets purement décoratifs : supprimés, pas raccourcis */
+    .hero::before,
+    .hero::after,
+    .cta::after,
+    .tilt::after,
+    .status-dot {
+        animation: none !important;
+        opacity: 0 !important;
+    }
+
+    .tilt {
+        transform: none !important;
+    }
+
+    /* Pas de révélation en cercle au changement de thème */
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+        animation: none !important;
     }
 }
 
