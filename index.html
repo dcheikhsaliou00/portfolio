@@ -119,7 +119,7 @@
         /* ------------------------------------------------------------
            SECOURS POUR LE PORTRAIT
            Selon l'hébergement, les images peuvent se trouver dans
-           assets/ ou à la racine. Cette fonction essaie chaque chemin
+           la racine ou dans assets/. Cette fonction essaie chaque chemin
            l'un après l'autre jusqu'à ce que l'un fonctionne, puis
            s'arrête (this.onerror = null) pour éviter toute boucle.
            Définie ici, dans le <head>, car une erreur de chargement
@@ -127,9 +127,9 @@
            ------------------------------------------------------------ */
         window.portraitFallback = function (img) {
             var chemins = [
-                'cheikh-saliou-diaw.jpg',
-                'assets/cheikh-saliou-diaw.svg',
-                'cheikh-saliou-diaw.svg'
+                'cheikh-saliou-diaw.svg',
+                'assets/cheikh-saliou-diaw.jpg',
+                'assets/cheikh-saliou-diaw.svg'
             ];
             var i = Number(img.dataset.essai || 0);
             if (i < chemins.length) {
@@ -155,8 +155,8 @@
     <!-- ============================================================
          FAVICON — Icône dans l'onglet du navigateur
          ============================================================ -->
-    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-    <link rel="apple-touch-icon" href="assets/cheikh-saliou-diaw.jpg">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="apple-touch-icon" href="cheikh-saliou-diaw.jpg">
 
     <!-- ============================================================
          FEUILLE DE STYLES PRINCIPALE
@@ -280,8 +280,11 @@
                 <div class="hero-actions">
                     <a class="cta" href="#contact">Me contacter</a>
                     <a class="ghost" href="#experiences">Voir mes expériences</a>
-                    <!-- TODO : Ajouter ton CV en PDF dans le dossier assets/ et décommenter -->
-                    <!-- <a class="ghost ghost-alt" href="assets/CV-Cheikh-Saliou-Diaw.pdf" download>Télécharger mon CV</a> -->
+                    <!-- Le nom du fichier contient des espaces : ils sont encodés en %20,
+                         sinon le navigateur coupe l'adresse au premier espace. -->
+                    <a class="ghost ghost-alt" href="CV%20Cheikh%20Saliou%20Diaw%20FR.pdf" download>
+                        Télécharger mon CV
+                    </a>
                 </div>
 
                 <!-- Coordonnées rapides avec icônes emoji -->
@@ -307,11 +310,11 @@
             <aside class="hero-aside" aria-labelledby="profil-heading" data-animate="scale">
                 <div class="portrait-frame">
                     <!-- Si la photo ne se charge pas (fichier à la racine
-                         plutôt que dans assets/, chemin cassé…), la
+                         dans assets/ au lieu de la racine, chemin cassé…), la
                          fonction portraitFallback définie dans le <head>
                          essaie les autres emplacements connus. -->
                     <img
-                        src="assets/cheikh-saliou-diaw.jpg"
+                        src="cheikh-saliou-diaw.jpg"
                         alt="Portrait de Cheikh Saliou Diaw"
                         width="1024"
                         height="1024"
