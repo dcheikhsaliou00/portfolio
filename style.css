@@ -366,6 +366,11 @@ html[data-theme="light"] .theme-icon-sun {
 
 .hero {
     position: relative;
+    /* Confine les halos décoratifs : leurs pseudo-éléments sont mis à
+       l'échelle 1.12 et déborderaient de la page, créant une barre de
+       défilement horizontale. Sans danger pour la navbar collante,
+       qui est désormais hors du <header>. */
+    overflow: hidden;
     background:
         radial-gradient(circle at top left, rgba(var(--accent-rgb), var(--glow-strong)), transparent 55%),
         radial-gradient(circle at bottom right, rgba(var(--accent-rgb), var(--glow-soft)), transparent 60%),
