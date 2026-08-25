@@ -1,84 +1,146 @@
 /* ============================================================
-   VARIABLES DE THÈME (Design tokens)
-   Toutes les couleurs passent par des variables CSS. Le thème
-   clair se contente de redéfinir ces mêmes variables sur
-   [data-theme="light"] : aucun autre sélecteur n'a besoin
-   d'être dupliqué.
+   JETONS SÉMANTIQUES
+   Nommés par USAGE, jamais par teinte. On écrit
+   --content-accent, pas --rouge-600 : le jour où la marque
+   change de couleur, le nom reste vrai.
+
+   Trois familles :
+     surface-*  ce sur quoi on pose du contenu
+     content-*  ce qui se lit par-dessus une surface
+     border-*   ce qui délimite
+
+   RÈGLE : chaque jeton est défini une fois par thème, au même
+   endroit. Aucune règle de composant ne redéfinit une couleur
+   pour un thème donné — s'il en faut une, c'est qu'un jeton
+   manque.
    ============================================================ */
 
 :root {
-    /* Couleur d'accent (identique dans les deux thèmes) */
-    --accent: #e53935;
-    --accent-dark: #b71c1c;
-    --accent-rgb: 229, 57, 53;
-
-    /* Rayons, ombres, transitions */
+    /* -------- Valeurs non chromatiques, communes aux thèmes -------- */
     --radius-lg: 22px;
     --radius-md: 18px;
     --radius-sm: 12px;
     --ease: cubic-bezier(0.22, 1, 0.36, 1);
-
-    /* Largeur maximale du contenu, centrée */
     --content-max: 1180px;
-
     font-size: 16px;
 }
 
-/* ---------- THÈME SOMBRE (par défaut) ---------- */
+/* ============================================================
+   THÈME CLAIR
+   L'accent-texte y est plus sombre que l'accent-aplat de la
+   marque : mesuré, #e53935 ne donnait que 4,23:1 sur blanc,
+   sous le seuil de 4,5 exigé par WCAG 1.4.3 (AA).
+   ============================================================ */
+
 :root,
-[data-theme="dark"] {
-    color-scheme: dark;
-
-    --bg-primary: #0b0b10;
-    --bg-secondary: #12121a;
-    --bg-tertiary: #171722;
-
-    --text-primary: #f5f5f7;
-    --text-secondary: #b0b2c3;
-
-    --border-soft: rgba(255, 255, 255, 0.06);
-    --border-accent: rgba(var(--accent-rgb), 0.25);
-
-    --nav-bg: rgba(11, 11, 16, 0.85);
-    --card-gradient: linear-gradient(160deg, rgba(var(--accent-rgb), 0.16), rgba(23, 23, 34, 0.9));
-    --aside-gradient: linear-gradient(160deg, rgba(var(--accent-rgb), 0.18), rgba(23, 23, 34, 0.8));
-    --field-bg: rgba(255, 255, 255, 0.05);
-    --chip-bg: rgba(255, 255, 255, 0.06);
-
-    /* Intensité des halos colorés du hero */
-    --glow-strong: 0.35;
-    --glow-soft: 0.18;
-
-    --shadow-soft: 0 25px 60px rgba(0, 0, 0, 0.45);
-    --shadow-card: 0 18px 45px rgba(0, 0, 0, 0.35);
-}
-
-/* ---------- THÈME CLAIR ---------- */
 [data-theme="light"] {
     color-scheme: light;
 
-    --bg-primary: #ffffff;
-    --bg-secondary: #f5f5f9;
-    --bg-tertiary: #ffffff;
+    /* -------- Surfaces -------- */
+    --surface-page:        #ffffff;
+    --surface-raised:      #f5f5f9;
+    --surface-card:        #ffffff;
+    --surface-nav:         rgba(255, 255, 255, 0.85);
+    --surface-field:       rgba(16, 16, 30, 0.03);
+    --surface-chip:        rgba(16, 16, 30, 0.05);
+    --surface-accent:      #d23430;  /* blanc dessus : 4,92:1 */
+    --surface-accent-deep: #9e1a17;  /* extrémité sombre du dégradé */
+    --surface-success:     rgba(21, 128, 61, 0.08);
+    --surface-danger:      rgba(185, 28, 28, 0.08);
 
-    --text-primary: #14141c;
-    --text-secondary: #55586b;
+    /* -------- Contenu -------- */
+    --content-primary:     #14141c;
+    --content-secondary:   #55586b;
+    --content-accent:      #d23430;  /* 4,92 sur page, 4,53 sur raised */
+    --content-accent-alt:  #9e1a17;  /* second ton, pour le texte en dégradé */
+    --content-on-accent:   #ffffff;
+    --content-success:     #15803d;
+    --content-danger:      #b91c1c;
 
-    --border-soft: rgba(16, 16, 30, 0.1);
-    --border-accent: rgba(var(--accent-rgb), 0.3);
+    /* -------- Bordures -------- */
+    --border-subtle:       rgba(16, 16, 30, 0.12);
+    --border-accent:       rgba(210, 52, 48, 0.35);
+    --border-success:      rgba(21, 128, 61, 0.35);
+    --border-focus:        #d23430;
 
-    --nav-bg: rgba(255, 255, 255, 0.85);
-    --card-gradient: linear-gradient(160deg, rgba(var(--accent-rgb), 0.08), rgba(255, 255, 255, 0.95));
-    --aside-gradient: linear-gradient(160deg, rgba(var(--accent-rgb), 0.1), rgba(255, 255, 255, 0.95));
-    --field-bg: rgba(16, 16, 30, 0.03);
-    --chip-bg: rgba(16, 16, 30, 0.05);
+    /* -------- Composition (halos, ombres) -------- */
+    --accent-rgb:          210, 52, 48;
+    --success-rgb:         21, 128, 61;
+    --glow-strong:         0.16;
+    --glow-soft:           0.09;
+    --shadow-soft:         0 25px 60px rgba(16, 16, 40, 0.14);
+    --shadow-card:         0 18px 45px rgba(16, 16, 40, 0.08);
+    --shadow-nav:          0 10px 30px rgba(16, 16, 40, 0.10);
+}
 
-    /* Halos plus discrets sur fond clair, sinon le rose sature */
-    --glow-strong: 0.16;
-    --glow-soft: 0.09;
+/* ============================================================
+   THÈME SOMBRE
+   L'accent-texte y est ÉCLAIRCI, pas assombri : sur un fond
+   sombre, la contrainte s'inverse. C'est la raison d'être de
+   deux jetons distincts pour l'accent — aucune valeur unique
+   ne satisfait les deux thèmes.
+   ============================================================ */
 
-    --shadow-soft: 0 25px 60px rgba(16, 16, 40, 0.14);
-    --shadow-card: 0 18px 45px rgba(16, 16, 40, 0.08);
+[data-theme="dark"] {
+    color-scheme: dark;
+
+    --surface-page:        #0b0b10;
+    --surface-raised:      #12121a;
+    --surface-card:        #171722;
+    --surface-nav:         rgba(11, 11, 16, 0.85);
+    --surface-field:       rgba(255, 255, 255, 0.05);
+    --surface-chip:        rgba(255, 255, 255, 0.06);
+    --surface-accent:      #d23430;  /* blanc dessus : 4,92:1 */
+    --surface-accent-deep: #8c1613;
+    --surface-success:     rgba(74, 222, 128, 0.10);
+    --surface-danger:      rgba(248, 113, 113, 0.10);
+
+    --content-primary:     #f5f5f7;
+    --content-secondary:   #b0b2c3;
+    --content-accent:      #e74642;  /* 4,99 / 4,74 / 4,52 sur les 3 fonds */
+    --content-accent-alt:  #ff8380;  /* second ton, éclairci pour rester lisible */
+    --content-on-accent:   #ffffff;
+    --content-success:     #4ade80;
+    --content-danger:      #f87171;
+
+    --border-subtle:       rgba(255, 255, 255, 0.10);
+    --border-accent:       rgba(231, 70, 66, 0.30);
+    --border-success:      rgba(74, 222, 128, 0.35);
+    --border-focus:        #e74642;
+
+    --accent-rgb:          231, 70, 66;
+    --success-rgb:         74, 222, 128;
+    --glow-strong:         0.35;
+    --glow-soft:           0.18;
+    --shadow-soft:         0 25px 60px rgba(0, 0, 0, 0.45);
+    --shadow-card:         0 18px 45px rgba(0, 0, 0, 0.35);
+    --shadow-nav:          0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+/* ============================================================
+   ALIAS DE MIGRATION — À SUPPRIMER
+   Les anciens noms pointent vers les nouveaux jetons, le temps
+   de migrer les règles de composants. Ce ne sont PAS des
+   surcharges de thème : ils ne redéfinissent rien, ils
+   redirigent. Aucun nouveau code ne doit les utiliser.
+   ============================================================ */
+
+:root,
+[data-theme="light"],
+[data-theme="dark"] {
+    --bg-primary:      var(--surface-page);
+    --bg-secondary:    var(--surface-raised);
+    --bg-tertiary:     var(--surface-card);
+    --text-primary:    var(--content-primary);
+    --text-secondary:  var(--content-secondary);
+    --nav-bg:          var(--surface-nav);
+    --field-bg:        var(--surface-field);
+    --chip-bg:         var(--surface-chip);
+    --border-soft:     var(--border-subtle);
+    --accent:          var(--surface-accent);
+    --accent-dark:     var(--surface-accent-deep);
+    --card-gradient:   linear-gradient(160deg, rgba(var(--accent-rgb), 0.14), var(--surface-card));
+    --aside-gradient:  linear-gradient(160deg, rgba(var(--accent-rgb), 0.16), var(--surface-card));
 }
 
 /* ============================================================
@@ -121,7 +183,7 @@ a {
 
 a:hover,
 a:focus {
-    color: var(--accent);
+    color: var(--content-accent);
 }
 
 /* Focus clavier visible et cohérent partout */
@@ -129,7 +191,7 @@ a:focus-visible,
 button:focus-visible,
 input:focus-visible,
 textarea:focus-visible {
-    outline: 2px solid var(--accent);
+    outline: 2px solid var(--border-focus);
     outline-offset: 3px;
     border-radius: 4px;
 }
@@ -152,7 +214,7 @@ h1, h2, h3 {
     left: 50%;
     transform: translateX(-50%);
     background: var(--accent);
-    color: #fff;
+    color: var(--content-on-accent);
     padding: 0.8rem 1.6rem;
     border-radius: 0 0 12px 12px;
     font-weight: 600;
@@ -162,7 +224,7 @@ h1, h2, h3 {
 
 .skip-link:focus {
     top: 0;
-    color: #fff;
+    color: var(--content-on-accent);
 }
 
 /* Bannière affichée si JavaScript est désactivé */
@@ -170,7 +232,27 @@ h1, h2, h3 {
     text-align: center;
     padding: 1rem;
     background: var(--accent);
-    color: #fff;
+    color: var(--content-on-accent);
+}
+
+/* ------------------------------------------------------------
+   TEXTE RÉSERVÉ AUX LECTEURS D'ÉCRAN
+   Masqué visuellement mais lu par les technologies d'assistance.
+   On n'utilise ni display:none ni visibility:hidden : les deux
+   retirent l'élément de l'arbre d'accessibilité, donc du
+   discours du lecteur d'écran.
+   ------------------------------------------------------------ */
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
 }
 
 /* ============================================================
@@ -221,7 +303,7 @@ h1, h2, h3 {
 .navbar.is-scrolled {
     padding-top: 0.7rem;
     padding-bottom: 0.7rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+    box-shadow: var(--shadow-nav);
 }
 
 .brand {
@@ -234,6 +316,12 @@ h1, h2, h3 {
     text-transform: uppercase;
 }
 
+/* Le lien de marque est une cible tactile à part entière :
+   sa hauteur suit celle des autres controles de la navbar. */
+.brand {
+    min-height: 44px;
+}
+
 .brand-logo {
     display: inline-flex;
     align-items: center;
@@ -243,7 +331,7 @@ h1, h2, h3 {
     flex-shrink: 0;
     border-radius: 12px;
     background: linear-gradient(135deg, var(--accent), var(--accent-dark));
-    color: #fff;
+    color: var(--content-on-accent);
     font-weight: 700;
 }
 
@@ -380,7 +468,7 @@ html[data-theme="light"] .theme-icon-sun {
 
 .hero-wrapper {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
     gap: 3rem;
     align-items: center;
     padding: 4.5rem 6% 0;
@@ -400,26 +488,28 @@ html[data-theme="light"] .theme-icon-sun {
 .hero-role {
     font-size: clamp(1.3rem, 3vw, 2rem);
     font-weight: 500;
-    color: var(--accent);
+    color: var(--content-accent);
     margin: 0.4rem 0 1.2rem;
-    /* Réserve la hauteur d'une ligne pour éviter que le contenu
-       ne « saute » pendant l'effet de frappe */
-    min-height: 1.3em;
+    /* Réserve la hauteur de deux lignes : les intitulés n'ont pas tous
+       la même longueur et, sans cela, le bloc entier remonterait à
+       chaque rotation. */
+    min-height: 2.6em;
+    transition: opacity 0.32s var(--ease);
 }
 
-/* Curseur clignotant de l'effet machine à écrire */
-.hero-role .caret {
-    display: inline-block;
-    width: 2px;
-    height: 1em;
-    margin-left: 2px;
-    vertical-align: -0.12em;
-    background: var(--accent);
-    animation: blink 1s step-end infinite;
+/* Seul l'intitulé s'estompe, jamais jusqu'à disparaître : même au
+   creux du fondu, le texte reste lisible. */
+.hero-role.is-fading {
+    opacity: 0.25;
 }
 
-@keyframes blink {
-    50% { opacity: 0; }
+/* Mouvement réduit : aucune rotation, aucun fondu. */
+@media (prefers-reduced-motion: reduce) {
+    .hero-role,
+    .hero-role.is-fading {
+        opacity: 1;
+        transition: none;
+    }
 }
 
 .hero-content p {
@@ -444,14 +534,14 @@ html[data-theme="light"] .theme-icon-sun {
     height: 9px;
     flex-shrink: 0;
     border-radius: 50%;
-    background: #22c55e;
-    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6);
+    background: var(--content-success);
+    box-shadow: 0 0 0 0 rgba(var(--success-rgb), 0.6);
     animation: pulse 2.4s infinite;
 }
 
 @keyframes pulse {
-    70% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+    70% { box-shadow: 0 0 0 10px rgba(var(--success-rgb), 0); }
+    100% { box-shadow: 0 0 0 0 rgba(var(--success-rgb), 0); }
 }
 
 .hero-actions {
@@ -485,13 +575,13 @@ html[data-theme="light"] .theme-icon-sun {
 
 .cta {
     background: linear-gradient(135deg, var(--accent), var(--accent-dark));
-    color: #fff;
+    color: var(--content-on-accent);
     box-shadow: 0 18px 45px rgba(var(--accent-rgb), 0.35);
 }
 
 .cta:hover,
 .cta:focus {
-    color: #fff;
+    color: var(--content-on-accent);
     transform: translateY(-2px);
     box-shadow: 0 22px 55px rgba(var(--accent-rgb), 0.5);
 }
@@ -550,13 +640,13 @@ html[data-theme="light"] .theme-icon-sun {
 }
 
 .copy-btn:hover {
-    color: var(--accent);
+    color: var(--content-accent);
     border-color: var(--border-accent);
 }
 
 .copy-btn.is-copied {
-    color: #22c55e;
-    border-color: rgba(34, 197, 94, 0.5);
+    color: var(--content-success);
+    border-color: var(--border-success);
 }
 
 /* ---------- Carte latérale (portrait) ---------- */
@@ -626,7 +716,7 @@ html[data-theme="light"] .theme-icon-sun {
 .stats {
     list-style: none;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(160px, 100%), 1fr));
     gap: 1.5rem;
     max-width: var(--content-max);
     margin: 4rem auto 0;
@@ -644,7 +734,10 @@ html[data-theme="light"] .theme-icon-sun {
     font-size: clamp(1.8rem, 4vw, 2.4rem);
     font-weight: 700;
     line-height: 1.1;
-    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    /* Ce dégradé peint du TEXTE, pas une surface : il utilise donc les
+       jetons content-*, validés pour la lecture, et non surface-accent
+       qui est calibré pour porter du texte blanc par-dessus. */
+    background: linear-gradient(135deg, var(--content-accent), var(--content-accent-alt));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -732,7 +825,7 @@ html[data-theme="light"] .theme-icon-sun {
 
 .about-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
     gap: 2rem;
 }
 
@@ -775,7 +868,7 @@ html[data-theme="light"] .theme-icon-sun {
 
 .skills-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
     gap: 1.8rem;
 }
 
@@ -870,7 +963,7 @@ html[data-theme="light"] .theme-icon-sun {
     align-items: center;
     flex-wrap: wrap;
     gap: 0.5rem;
-    color: var(--accent);
+    color: var(--content-accent);
     font-weight: 600;
     font-size: 0.92rem;
 }
@@ -892,7 +985,7 @@ html[data-theme="light"] .theme-icon-sun {
     content: '›';
     position: absolute;
     left: 0;
-    color: var(--accent);
+    color: var(--content-accent);
     font-weight: 700;
 }
 
@@ -933,7 +1026,7 @@ html[data-theme="light"] .theme-icon-sun {
 
 .project-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
     gap: 1.8rem;
 }
 
@@ -985,7 +1078,7 @@ html[data-theme="light"] .theme-icon-sun {
     align-items: center;
     gap: 0.35rem;
     margin-top: 1rem;
-    color: var(--accent);
+    color: var(--content-accent);
     font-weight: 600;
     font-size: 0.9rem;
 }
@@ -1006,7 +1099,7 @@ html[data-theme="light"] .theme-icon-sun {
 
 .contact-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
     gap: 2rem;
 }
 
@@ -1024,6 +1117,32 @@ html[data-theme="light"] .theme-icon-sun {
     margin-bottom: 1.2rem;
 }
 
+
+/* ------------------------------------------------------------
+   MARQUAGE OBLIGATOIRE / FACULTATIF
+   WCAG 3.3.2 : l'obligation doit être perceptible avant la
+   soumission, pas seulement révélée par un message d'erreur.
+   L'astérisque est aria-hidden : l'attribut required la porte
+   déjà pour les lecteurs d'écran, la répéter donnerait
+   « Nom étoile obligatoire ».
+   ------------------------------------------------------------ */
+
+.requis {
+    color: var(--content-danger);
+    font-weight: 700;
+}
+
+.facultatif {
+    color: var(--content-secondary);
+    font-weight: 400;
+    font-size: 0.85em;
+}
+
+.form-intro {
+    margin-bottom: 1.4rem;
+    font-size: 0.9rem;
+    color: var(--content-secondary);
+}
 .contact-form {
     display: grid;
     gap: 1rem;
@@ -1062,21 +1181,33 @@ html[data-theme="light"] .theme-icon-sun {
     opacity: 0.7;
 }
 
+/* Mise en valeur du champ actif : s'applique dans TOUS les cas,
+   souris comme clavier. Mesurée à 3,89–4,65:1 contre la surface
+   adjacente, la bordure satisfait WCAG 1.4.11 à elle seule ; le
+   halo n'est qu'un renfort décoratif (1,2:1). */
 .form-group input:focus,
 .form-group textarea:focus {
-    outline: none;
-    border-color: var(--accent);
+    border-color: var(--border-focus);
     box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.22);
+}
+
+/* Le contour n'est retiré que pour le focus à la SOURIS.
+   Sans le :not(:focus-visible), cette règle (spécificité 0,2,1)
+   écrasait input:focus-visible (0,1,1) et la navigation au clavier
+   perdait l'anneau standard — c'est ce que la mesure avait révélé. */
+.form-group input:focus:not(:focus-visible),
+.form-group textarea:focus:not(:focus-visible) {
+    outline: none;
 }
 
 /* État d'erreur d'un champ */
 .form-group input[aria-invalid="true"],
 .form-group textarea[aria-invalid="true"] {
-    border-color: var(--accent);
+    border-color: var(--border-focus);
 }
 
 .field-error {
-    color: var(--accent);
+    color: var(--content-accent);
     font-size: 0.82rem;
     min-height: 1.1em;
 }
@@ -1110,11 +1241,11 @@ html[data-theme="light"] .theme-icon-sun {
 }
 
 .form-status.is-success {
-    color: #22c55e;
+    color: var(--content-success);
 }
 
 .form-status.is-error {
-    color: var(--accent);
+    color: var(--content-accent);
 }
 
 .contact-list {
@@ -1134,8 +1265,8 @@ html[data-theme="light"] .theme-icon-sun {
     margin-top: 1.6rem;
     padding: 0.9rem 1.1rem;
     border-radius: var(--radius-sm);
-    background: rgba(34, 197, 94, 0.08);
-    border: 1px solid rgba(34, 197, 94, 0.25);
+    background: var(--surface-success);
+    border: 1px solid var(--border-success);
     font-size: 0.9rem;
 }
 
@@ -1157,6 +1288,66 @@ html[data-theme="light"] .theme-icon-sun {
     opacity: 0.75;
 }
 
+
+/* ============================================================
+   CIBLES TACTILES
+   Seuil produit retenu : 44x44 px (WCAG 2.5.5, niveau AAA).
+   Le niveau AA de WCAG 2.2 exige 24x24 px (SC 2.5.8) ; on vise
+   plus haut parce que les visiteurs consultent au pouce, en
+   mobilité, souvent en plein soleil.
+
+   Technique : pour les contrôles dont l'agrandissement casserait
+   la mise en page (bouton « Copier » aligné dans une ligne de
+   texte, lien de démo en bas de carte), on étend la zone
+   cliquable avec un pseudo-élément absolu. Le contrôle garde sa
+   taille visuelle, le doigt gagne la surface.
+   ============================================================ */
+
+/* Contrôles autonomes : on agrandit directement */
+.theme-toggle,
+.nav-toggle {
+    width: 44px;
+    height: 44px;
+}
+
+.filter {
+    min-height: 44px;
+}
+
+.cta,
+.ghost {
+    min-height: 44px;
+}
+
+/* Contrôles insérés dans du texte : zone étendue sans impact visuel */
+.copy-btn,
+.project-link {
+    position: relative;
+}
+
+.copy-btn::after,
+.project-link::after {
+    content: '';
+    position: absolute;
+    /* Centre une zone de 44 px de haut sur le contrôle, quelle que
+       soit sa hauteur visuelle. */
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 44px;
+    transform: translateY(-50%);
+    /* La zone ne doit rien masquer visuellement */
+    background: transparent;
+}
+
+/* Les liens de contact du hero et de la carte coordonnées :
+   même traitement, la ligne devient confortable au pouce. */
+.hero-info a,
+.contact-list a,
+.about-card a {
+    display: inline-block;
+    padding-block: 0.6rem;
+}
 .back-to-top {
     position: fixed;
     right: 1.5rem;
@@ -1166,7 +1357,7 @@ html[data-theme="light"] .theme-icon-sun {
     border-radius: 999px;
     border: none;
     background: rgba(var(--accent-rgb), 0.95);
-    color: #fff;
+    color: var(--content-on-accent);
     font-size: 1.2rem;
     cursor: pointer;
     /* On garde le bouton en flex et on joue sur l'opacité :
@@ -1177,7 +1368,7 @@ html[data-theme="light"] .theme-icon-sun {
     opacity: 0;
     visibility: hidden;
     transform: translateY(12px);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-soft);
     transition: transform 0.3s var(--ease), opacity 0.3s var(--ease), visibility 0.3s;
     z-index: 130;
 }
@@ -1622,8 +1813,19 @@ html[data-theme="light"] .theme-icon-sun {
         padding: 1rem 6%;
     }
 
+    /* Les deux boutons de la navbar font désormais 44 px (cible
+       tactile). L'espace restant ne suffit plus au nom complet :
+       on resserre la typographie plutôt que de le laisser passer
+       sur deux lignes, ce qui déformait la hauteur de la barre. */
     .brand-name {
-        font-size: 0.85rem;
+        font-size: 0.72rem;
+        letter-spacing: 0.02em;
+        white-space: nowrap;
+    }
+
+    .brand {
+        gap: 0.5rem;
+        min-width: 0;
     }
 
     .cta,

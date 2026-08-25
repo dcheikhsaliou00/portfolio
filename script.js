@@ -157,7 +157,15 @@ function initScrollEffects() {
         }
 
         if (backToTop) {
-            backToTop.classList.toggle('visible', scrollTop > 300);
+            // Le bouton flotte au-dessus du contenu. Dans la section
+            // contact, il chevauchait la zone du bouton d'envoi : on le
+            // retire dès que le formulaire est à l'écran, pour qu'il ne
+            // dispute jamais le clic à l'action principale.
+            const contact = document.querySelector('#contact');
+            const contactVisible = contact
+                ? contact.getBoundingClientRect().top < viewport * 0.75
+                : false;
+            backToTop.classList.toggle('visible', scrollTop > 300 && !contactVisible);
         }
 
         // Parallaxe : le portrait se décale plus lentement que la
@@ -352,50 +360,50 @@ function initCounters() {
 }
 
 /* ============================================================
-   7. EFFET MACHINE À ÉCRIRE (titre du hero)
-   Le texte de repli est déjà dans le HTML (bon pour le SEO et
-   pour les utilisateurs sans JS) ; on ne l'anime que si les
-   animations sont autorisées.
+   7. ROTATION DES INTITULÉS DE POSTE (titre du hero)
+
+   Ce bloc écrivait auparavant le titre lettre par lettre. Mesuré
+   au chargement en 375 px, le <h2> affichait « Au » : pendant les
+   premières secondes, la seule information qui dit à un recruteur
+   quel est le métier de la personne était illisible, et le cycle
+   la réécrivait indéfiniment.
+
+   La rotation est conservée, la frappe est abandonnée : on passe
+   d'un libellé COMPLET au suivant par un fondu. À chaque instant,
+   ce qui est à l'écran est un intitulé entier et exact — y compris
+   à la toute première image, puisque le premier libellé est déjà
+   dans le HTML et n'est jamais effacé.
    ============================================================ */
 
-function initTypingEffect() {
+function initRoleRotation() {
     const element = document.querySelector('[data-typed]');
-    if (!element || prefersReducedMotion) return;
+    if (!element) return;
 
     const phrases = element.dataset.typed.split('|').map((s) => s.trim()).filter(Boolean);
-    if (phrases.length < 2) return;
 
-    const textNode = document.createElement('span');
-    const caret = document.createElement('span');
-    caret.className = 'caret';
+    // Le premier intitulé est le principal : il est déjà rendu par le
+    // HTML. On le réaffirme ici pour retirer d'éventuels espaces.
+    element.textContent = phrases[0] || element.textContent.trim();
 
-    element.textContent = '';
-    element.append(textNode, caret);
+    // Mouvement réduit, ou un seul intitulé : on s'arrête là, titre fixe.
+    if (prefersReducedMotion || phrases.length < 2) return;
 
-    let phraseIndex = 0;
-    let charIndex = 0;
-    let deleting = false;
+    const DUREE_FONDU = 320;   // doit rester alignée sur la transition CSS
+    const DUREE_LECTURE = 3200;
+    let index = 0;
 
-    const tick = () => {
-        const phrase = phrases[phraseIndex];
-        charIndex += deleting ? -1 : 1;
-        textNode.textContent = phrase.slice(0, charIndex);
+    const suivant = () => {
+        element.classList.add('is-fading');
 
-        let delay = deleting ? 40 : 75;
-
-        if (!deleting && charIndex === phrase.length) {
-            delay = 2200;          // pause une fois la phrase écrite
-            deleting = true;
-        } else if (deleting && charIndex === 0) {
-            deleting = false;
-            phraseIndex = (phraseIndex + 1) % phrases.length;
-            delay = 400;
-        }
-
-        setTimeout(tick, delay);
+        setTimeout(() => {
+            index = (index + 1) % phrases.length;
+            element.textContent = phrases[index];
+            element.classList.remove('is-fading');
+            setTimeout(suivant, DUREE_LECTURE);
+        }, DUREE_FONDU);
     };
 
-    setTimeout(tick, 1200);
+    setTimeout(suivant, DUREE_LECTURE);
 }
 
 /* ============================================================
@@ -408,6 +416,7 @@ function initProjectFilters() {
     const filters = document.querySelectorAll('.filter');
     const cards = document.querySelectorAll('.project-card');
     const emptyMessage = document.querySelector('.no-result');
+    const statut = document.querySelector('[data-filter-status]');
     if (!filters.length || !cards.length) return;
 
     filters.forEach((button) => {
@@ -442,6 +451,20 @@ function initProjectFilters() {
             });
 
             if (emptyMessage) emptyMessage.hidden = visibleCount > 0;
+
+            // WCAG 4.1.3 Messages de statut (AA) : le filtrage change le
+            // nombre de projets visibles sans déplacer le focus. Sans cette
+            // région live, un lecteur d'écran n'annonce rien. Le libellé du
+            // bouton est repris pour que l'annonce ait du sens hors contexte
+            // visuel : « 4 projets affichés pour la catégorie Web ».
+            if (statut) {
+                const categorie = button.textContent.trim();
+                const pluriel = visibleCount > 1 ? 's' : '';
+                statut.textContent = visibleCount === 0
+                    ? 'Aucun projet dans la catégorie ' + categorie + '.'
+                    : visibleCount + ' projet' + pluriel + ' affiché' + pluriel
+                      + ' pour la catégorie ' + categorie + '.';
+            }
         });
     });
 }
@@ -675,7 +698,7 @@ initScrollAnimations();
 initTilt();
 initScrollSpy();
 initCounters();
-initTypingEffect();
+initRoleRotation();
 initProjectFilters();
 initCopyButtons();
 initContactForm();

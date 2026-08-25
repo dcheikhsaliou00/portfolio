@@ -680,6 +680,12 @@
 
             <!-- Message affiché si aucun projet ne correspond au filtre -->
             <p class="no-result" hidden>Aucun projet dans cette catégorie pour le moment.</p>
+
+            <!-- WCAG 4.1.3 Messages de statut (AA) : le filtrage change le
+                 nombre de projets visibles sans deplacer le focus. Sans region
+                 live, un lecteur d'écran n'apprend rien. Le texte est
+                 visuellement masque mais reste annonce. -->
+            <p class="sr-only" role="status" aria-live="polite" data-filter-status></p>
         </section>
 
         <!-- ========== SECTION "CONTACT" ==========
@@ -706,10 +712,18 @@
                 <!-- Colonne gauche : Formulaire de contact -->
                 <div class="contact-card" data-animate>
                     <h3>Me laisser un message</h3>
+
+                    <!-- L'envoi ouvre le logiciel de messagerie du visiteur avec
+                         un brouillon prêt. Le dire AVANT le formulaire evite la
+                         surprise au moment du clic. -->
+                    <p class="form-intro">
+                        Ce formulaire prépare un message dans votre logiciel de messagerie.
+                        Les champs marqués <span class="requis" aria-hidden="true">*</span> sont obligatoires.
+                    </p>
                     <form class="contact-form" novalidate>
                         <!-- Champ Nom -->
                         <div class="form-group">
-                            <label for="name">Nom</label>
+                            <label for="name">Nom <span class="requis" aria-hidden="true">*</span></label>
                             <input
                                 type="text"
                                 id="name"
@@ -726,7 +740,7 @@
                         </div>
                         <!-- Champ Email -->
                         <div class="form-group">
-                            <label for="email">Email</label>
+                            <label for="email">Email <span class="requis" aria-hidden="true">*</span></label>
                             <input
                                 type="email"
                                 id="email"
@@ -741,7 +755,7 @@
                         </div>
                         <!-- Champ Sujet -->
                         <div class="form-group">
-                            <label for="subject">Sujet</label>
+                            <label for="subject">Sujet <span class="facultatif">(facultatif)</span></label>
                             <input
                                 type="text"
                                 id="subject"
@@ -752,7 +766,7 @@
                         </div>
                         <!-- Champ Message -->
                         <div class="form-group">
-                            <label for="message">Message</label>
+                            <label for="message">Message <span class="requis" aria-hidden="true">*</span></label>
                             <textarea
                                 id="message"
                                 name="message"
@@ -780,7 +794,7 @@
                         </div>
 
                         <!-- Bouton d'envoi -->
-                        <button type="submit" class="cta">Envoyer le message</button>
+                        <button type="submit" class="cta">Préparer mon message</button>
 
                         <!-- Zone de statut annoncée par les lecteurs d'écran -->
                         <p class="form-status" role="status" aria-live="polite"></p>
